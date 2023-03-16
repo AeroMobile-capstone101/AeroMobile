@@ -51,30 +51,14 @@ export default function SignUpScreen({ navigation }: any) {
 
   // -------------------------------------------------------------
   return (
-    <SafeAreaView style={styles.container}>
-      <View
-        style={{
-          width: "100%",
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "flex-start",
-        }}>
-        <Text style={styles.headText}>Get Your Account Created</Text>
+    <SafeAreaView>
+      <View>
+        <Text >Get Your Account Created</Text>
       </View>
 
       {/* ---------------- input field ----------------------  */}
       <View style={{ marginTop: 40 }}>
-        {/* <View style={styles.inputField}>
-          <TextInput
-            style={{ width: "88%" }}
-            placeholder='Complete Name'
-            value={name}
-            onChangeText={() => setValue(value.email)}
-          />
-          <FontAwesomeIcon name='user' size={25} />
-        </View> */}
-
-        <View style={styles.inputField}>
+        <View>
           <TextInput
             style={{ width: "88%" }}
             placeholder='Email Address'
@@ -84,7 +68,7 @@ export default function SignUpScreen({ navigation }: any) {
           <MaterialIcon name='email' size={25} />
         </View>
 
-        <View style={styles.inputField}>
+        <View >
           <TextInput
             style={{ width: "88%" }}
             placeholder='Password'
@@ -98,65 +82,20 @@ export default function SignUpScreen({ navigation }: any) {
 
       {/* ---------------- SignUp and Create Account Button----------------------  */}
 
-      <View style={{ marginTop: 30 }}>
+      <View >
         <TouchableOpacity
-          style={{
-            alignItems: "center",
-            width: 310,
-            padding: 12,
-            backgroundColor: "#83CB13",
-            borderRadius: 5,
-          }}
           onPress={handleSignUp}
           >
-          <Text style={styles.btnFont}>Sign Up</Text>
+          <Text>Sign Up</Text>
+
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={styles.btn}
           onPress={() => navigation.navigate("LogIn")}>
-          <Text style={styles.btnFont}>Already have an account </Text>
+          <Text>Already have an account </Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
   )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    width: "100%",
-    backgroundColor: "#fff",
-    alignItems: "flex-start",
-    justifyContent: "center",
-    padding: 25,
-  },
-  inputField: {
-    borderWidth: 1,
-    borderColor: "#000",
-    borderRadius: 5,
-    flexDirection: "row",
-    alignItems: "center",
-    width: 310,
-    justifyContent: "space-between",
-    padding: 10,
-    marginBottom: 10,
-  },
-  headText: {
-    fontSize: 30,
-  },
-  signUpCont: {
-    flexDirection: "row",
-  },
-  btn: {
-    alignItems: "center",
-    width: 310,
-    padding: 12,
-    backgroundColor: "#fff",
-    borderRadius: 5,
-    marginBottom: 10,
-  },
-  btnFont: {
-    fontSize: 16,
-  },
-})

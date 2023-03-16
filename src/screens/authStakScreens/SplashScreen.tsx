@@ -6,7 +6,7 @@ import Colors from "../../styles/Colors"
 
 const SplashScreen = ({ navigation }: any) => {
   return (
-    <View style={[styles.compContainer]}>
+    <View style={[styles.compContainer, Style.container]}>
 
         <View style={[styles.bgContainer , {flex: 5}]}>
           <Image
@@ -25,7 +25,7 @@ const SplashScreen = ({ navigation }: any) => {
                 <TouchableOpacity
                   style={[Style.button, {backgroundColor: Colors.White.color}]}
                   onPress={() => navigation.navigate("LogIn")}>
-                  <Text style={[Style.text, Colors.Black]}>Get Started</Text>
+                  <Text style={[Style.buttonText, Colors.Black]}>Get Started</Text>
                 </TouchableOpacity>
         </View>
 
@@ -37,10 +37,7 @@ export default SplashScreen
 
 const styles = StyleSheet.create({
   compContainer:{
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: Colors.Accent.color
+    backgroundColor: Colors.Accent.color,
   },
   btnContainer: {
     width: '100%',
@@ -67,12 +64,13 @@ const styles = StyleSheet.create({
   },
   bgContainer: {
     width: "100%",
+    alignItems: "center"
   },
   bgStyle:{
+    width: "140%",
+    height: "90%",
     marginTop: "10%",
     resizeMode: "stretch",
-    paddingTop: 100,
-    
   }
   
 })

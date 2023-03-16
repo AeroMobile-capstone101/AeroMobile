@@ -4,6 +4,8 @@ import { getAuth, signInWithEmailAndPassword } from "firebase/auth"
 
 import { AntDesign } from '@expo/vector-icons'; 
 import { Ionicons } from '@expo/vector-icons'; 
+import { MaterialIcons } from '@expo/vector-icons'; 
+import { Foundation } from '@expo/vector-icons'; 
 
 import Style from "../../styles/Style";
 import Colors from "../../styles/Colors";
@@ -59,13 +61,13 @@ export default function LogInScreen({ navigation }: any) {
   
 //  ---------------------------------------------
   return (
-    <View style={[Style.container, {paddingHorizontal: 32, flex:1}]}>
+    <View style={[Style.container]}>
 
 {/* --------------------back button styling------------------------ */}
       <View style={styles.backBtnContainer}>
 
         <TouchableOpacity  onPress={() => navigation.goBack()}>
-           <Ionicons name="md-return-up-back" size={40} color="black" />
+           <AntDesign name="swapleft" size={42} color="black" />
         </TouchableOpacity>
          
       </View>
@@ -73,44 +75,52 @@ export default function LogInScreen({ navigation }: any) {
 {/* ---------------- Header Text ----------------------  */}
       <View style={[styles.headerContainer]}>
         <Text style={styles.headerText}>Welcome Back!</Text>
-        <Text style={styles.pText}>Please enter your details to login.</Text>
+        <Text style={styles.pText}>Please provide your details to login.</Text>
       </View>
 
 
 {/* ---------------- username and password field ----------------------  */}
-      <View style={styles.inputFieldContainer}>
-        <View style={styles.inputField}> 
+      <View style={Style.inputFieldContainer}>
+        <View style={Style.inputField}> 
+
+          <MaterialIcons style={Style.inputFieldIcons} name="email" size={24} />
           <TextInput
-            style={styles.textInput}
+            style={Style.inputFieldText}
             placeholder='Email Address'
             value={value.email}
             onChangeText={(text) => setValue({...value, email: text})}
           />
-          <AntDesign name="user" size={24} color="black" />
         </View>
 
-        <View style={styles.inputField}>
-          <TextInput
-            style={styles.textInput}
-            placeholder='Password'
-            secureTextEntry={true}
-            value={value.password}
-            onChangeText={(text) => setValue({...value, password: text})}
-          />
-         <Ionicons name="lock-closed-outline" size={24} color="black" />
-        </View>
-
+        <View style={Style.inputField}>
+              <Foundation name="lock" size={24}  style={Style.inputFieldIcons}/>
+              <TextInput
+                style={Style.inputFieldText}
+                placeholder='Password'
+                secureTextEntry={true}
+                value={value.password}
+                onChangeText={(text) => setValue({...value, password: text})}
+              />
+            </View>
       </View>
 
-{/* ---------------- SignIn Button----------------------  */}
+{/* ---------------- Login and Create accout Button----------------------  */}
 
       <View style={styles.buttonContainer}>
 
         <TouchableOpacity
-          style={[Style.buttonSolid, styles.button]}
+          style={[Style.buttonSolid, Style.button, styles.customBtn]}
           onPress={handleSignIn}
           >
-          <Text style={[Style.text, styles.btnText]}>Sign In</Text>
+          <Text style={[Style.buttonText, styles.btnText]}>Sign In</Text>
+        </TouchableOpacity>
+
+      
+        <TouchableOpacity
+          style={[Style.buttonTransparent, Style.button]}
+          onPress={() => navigation.navigate("SignUp")}
+          >
+          <Text style={[Style.buttonText, {color: Colors.Black.color}]}>Create an account</Text>
         </TouchableOpacity>
 
       </View>
@@ -144,27 +154,6 @@ const styles = StyleSheet.create({
   pText: {
     fontSize: 15
   },
-
-  // inputField Styling
-  inputFieldContainer: {
-    flex: 1,
-    width: '100%',
-    justifyContent: 'flex-start'
-  },
-
-  inputField: {
-    flexDirection: 'row',
-    paddingVertical: 16,
-    paddingHorizontal: 16,
-    backgroundColor: "#fff",
-    marginBottom: 8,
-    borderRadius: 8,
-    
-  },
-  textInput: {
-    width: '90%',
-    fontSize: 15,
-  },
   
   // button container styling
   buttonContainer:{
@@ -172,10 +161,9 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     width: '100%',
   },
-  button: {
+  customBtn: {
     paddingVertical: 16,
     alignItems: 'center',
-    borderRadius: 8,
     marginTop: 8
   },
   btnText: {

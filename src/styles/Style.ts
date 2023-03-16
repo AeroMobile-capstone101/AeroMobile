@@ -10,18 +10,17 @@ export default StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        paddingHorizontal: 16
+        paddingHorizontal: 32
       },
       componentContainer: {
         width:'100%', 
         alignItems: 'center' 
       },
       button: {
-        width: '90%',
+        width: '100%',
         paddingVertical: 18,
         alignItems: 'center',
         borderRadius: 100,
-        marginVertical: 8
       },
       buttonSolid:{
         backgroundColor: accent.color,
@@ -29,12 +28,36 @@ export default StyleSheet.create({
       },
       buttonTransparent: {
         backgroundColor: 'none',
-        borderWidth: 2,
-        borderColor: accent.color,
+        color: "black",
       },
-      text: {
+      buttonText: {
         fontSize: 16,
         fontWeight: 'bold'
+      },
+      // inputField Styling
+      inputFieldContainer: {
+        flex: 1,
+        width: '100%',
+        justifyContent: 'flex-start'
+      },
+      inputField: {
+        alignItems: "center",
+        flexDirection: 'row',
+        paddingVertical: 16,
+        paddingHorizontal: 16,
+        backgroundColor: "#fff",
+        marginBottom: 8,
+        borderRadius: 100,
+        borderWidth: 1,
+        borderColor: "black"
+      },
+      inputFieldText: {
+        width: '90%',
+        fontSize: 16,
+      },
+      inputFieldIcons: {
+        marginRight: 8,
+        marginLeft: 8
       },
       tinyLogo: {
         width: 50,
