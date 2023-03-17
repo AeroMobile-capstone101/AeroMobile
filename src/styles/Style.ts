@@ -1,9 +1,6 @@
 import { StyleSheet } from 'react-native';
 import Colors from './Colors';
 
-const accent = Colors.Accent;
-const black = Colors.Black;
-const white = Colors.White;
 
 export default StyleSheet.create({
     container: {
@@ -23,8 +20,8 @@ export default StyleSheet.create({
         borderRadius: 100,
       },
       buttonSolid:{
-        backgroundColor: accent.color,
-        color: white.color
+        backgroundColor: Colors.Accent.color,
+        color: Colors.White.color
       },
       buttonTransparent: {
         backgroundColor: 'none',
@@ -34,6 +31,33 @@ export default StyleSheet.create({
         fontSize: 16,
         fontWeight: 'bold'
       },
+
+       // header text styling
+      headerContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '100%'
+      },
+      headerText: {
+        fontSize: 32,
+        fontWeight: 'bold',
+        lineHeight: 60
+      },
+      pText: {
+        fontSize: 12,
+        textAlign: "center",
+        fontWeight: "600"
+       },
+
+         // back button styling
+      backBtnContainer: {
+        flex: .5, 
+        width: '100%',
+        alignItems: 'flex-start',
+        justifyContent: 'center', 
+      },
+
       // inputField Styling
       inputFieldContainer: {
         flex: 1,
@@ -67,4 +91,12 @@ export default StyleSheet.create({
         width: 45,
         height: 90,
       },
+
+      //error message
+
+      errorMessage: {
+        color: "red",
+        textAlign: "center",
+        paddingVertical: 16
+      }
 });

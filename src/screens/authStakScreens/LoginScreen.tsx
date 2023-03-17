@@ -3,12 +3,12 @@ import { useEffect, useState } from "react"
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth"
 
 import { AntDesign } from '@expo/vector-icons'; 
-import { Ionicons } from '@expo/vector-icons'; 
 import { MaterialIcons } from '@expo/vector-icons'; 
 import { Foundation } from '@expo/vector-icons'; 
 
 import Style from "../../styles/Style";
 import Colors from "../../styles/Colors";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 // ---------------------------------------------------
 export default function LogInScreen({ navigation }: any) {
@@ -61,10 +61,9 @@ export default function LogInScreen({ navigation }: any) {
   
 //  ---------------------------------------------
   return (
-    <View style={[Style.container]}>
+    <SafeAreaView style={[Style.container]}>
 
-{/* --------------------back button styling------------------------ */}
-      <View style={styles.backBtnContainer}>
+      <View style={Style.backBtnContainer}>
 
         <TouchableOpacity  onPress={() => navigation.goBack()}>
            <AntDesign name="swapleft" size={42} color="black" />
@@ -73,9 +72,9 @@ export default function LogInScreen({ navigation }: any) {
       </View>
 
 {/* ---------------- Header Text ----------------------  */}
-      <View style={[styles.headerContainer]}>
-        <Text style={styles.headerText}>Welcome Back!</Text>
-        <Text style={styles.pText}>Please provide your details to login.</Text>
+      <View style={[Style.headerContainer]}>
+        <Text style={Style.headerText}>Welcome Back!</Text>
+        <Text style={Style.pText}>Please provide your details to login.</Text>
       </View>
 
 
@@ -124,37 +123,12 @@ export default function LogInScreen({ navigation }: any) {
         </TouchableOpacity>
 
       </View>
-    </View>
+    </SafeAreaView>
   )
 }
 
 const styles = StyleSheet.create({
 
-  // back button styling
-  backBtnContainer: {
-    flex: .5, 
-    width: '100%',
-    display: 'flex',
-    alignItems: 'flex-start',
-    justifyContent: 'flex-end', 
-  },
-
-  // header text styling
-  headerContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '100%'
-  },
-  headerText: {
-     fontSize: 32,
-     fontWeight: 'bold',
-     lineHeight: 60
-  },
-  pText: {
-    fontSize: 15
-  },
-  
   // button container styling
   buttonContainer:{
     flex: 1,
@@ -162,8 +136,6 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   customBtn: {
-    paddingVertical: 16,
-    alignItems: 'center',
     marginTop: 8
   },
   btnText: {
