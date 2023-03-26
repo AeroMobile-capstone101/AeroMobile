@@ -1,13 +1,16 @@
-import React, { useState } from "react"
+import React, { useCallback, useState } from "react"
 import { View, Text, TouchableOpacity, Image, StyleSheet, BackHandler} from "react-native"
 import Style from "../../styles/Style"
 import Colors from "../../styles/Colors"
+import { useFonts } from 'expo-font';
 
 
 const SplashScreen = ({ navigation }: any) => {
+
+  const [fontLoaded, setFontLoaded]= useState(false);
+
   return (
     <View style={[styles.compContainer, Style.container]}>
-
         <View style={[styles.bgContainer , {flex: 5}]}>
           <Image
               source={require("../../assets/images/onBoardLogo.png")}
@@ -15,7 +18,7 @@ const SplashScreen = ({ navigation }: any) => {
             />
         </View>
           
-        <View style={[styles.mainHeader, {flex: 2.5}]}>
+        <View style={[styles.mainHeader, {flex: 2.9}]}>
             <Text style={styles.headerText}>AeroMobile</Text>
             <Text style={styles.pText}>Easily Manage your system, </Text>
             <Text style={styles.pText}>all in one app! </Text>
@@ -23,7 +26,7 @@ const SplashScreen = ({ navigation }: any) => {
 
         <View style={[styles.btnContainer, {flex: 1}]}>
                 <TouchableOpacity
-                  style={[Style.button, {backgroundColor: Colors.White.color}]}
+                  style={ (!fontLoaded) ? [Style.button, {backgroundColor: Colors.White.color}] : [Style.buttonDisabled]}
                   onPress={() => navigation.navigate("LogIn")}>
                   <Text style={[Style.buttonText, Colors.Black]}>Get Started</Text>
                 </TouchableOpacity>

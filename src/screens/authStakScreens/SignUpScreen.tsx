@@ -3,9 +3,9 @@ import {
   SafeAreaView,
   Text,
   TextInput,
-  StyleSheet,
   TouchableOpacity,
-  KeyboardAvoidingView,
+  Image
+
 } from "react-native"
 import { useState } from "react"
 
@@ -17,6 +17,7 @@ import Style from "../../styles/Style";
 import Colors from "../../styles/Colors";
 
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth"
+import { ScrollView } from "react-native-gesture-handler";
 
 // --------component-------
 export default function SignUpScreen({ navigation }: any) {
@@ -72,7 +73,9 @@ export default function SignUpScreen({ navigation }: any) {
   return (
     <SafeAreaView style={Style.container}>
 
-       <View style={[Style.backBtnContainer, {justifyContent: "flex-end", marginBottom: 10}]}>
+      <ScrollView style={[{width: "100%" }]} showsVerticalScrollIndicator={false}>
+
+       <View style={[Style.backBtnContainer, {justifyContent: "flex-end", marginBottom: "0%", marginTop: "10%"}]}>
 
           <TouchableOpacity  onPress={() => navigation.goBack()}>
             <AntDesign name="swapleft" size={42} color="black" />
@@ -80,21 +83,25 @@ export default function SignUpScreen({ navigation }: any) {
 
         </View>
 
-        <View style={[Style.headerContainer, {justifyContent: "flex-end"}]}>
+        <View style={[Style.headerContainer, {marginBottom: "0%"}]}>
+          <Image
+              source={require("../../assets/images/greenLogo.png")}
+              style={{width: 220, height: 180}}
+          />
           <Text style={Style.headerText}>Create Account!</Text>
-          <Text style={Style.pText}>Provide your details to create your account.</Text>
+          <Text style={Style.pText}>Provide your details to sign up.</Text>
         </View>
 
       
       {/* ---------------- input field ----------------------  */}
 
 
-          <View style={[Style.inputFieldContainer, {flex: 2}]}>
+          <View style={[Style.inputFieldContainer, {marginBottom: "5%"}]}>
 
                 <Text style={Style.errorMessage}>{value.error}</Text>
 
                 <View style={Style.inputField}>
-                  <MaterialIcon name='email' size={24} />
+                  <MaterialIcon style={Style.inputFieldIcons}  name='email' size={24} />
                   <TextInput
                     style={{ width: "88%" }}
                     placeholder='Email Address'
@@ -106,7 +113,10 @@ export default function SignUpScreen({ navigation }: any) {
 
                 <View style={Style.inputField}>
 
-                  <FontAwesome5 name="user-lock" size={23} color="black" />
+                  <View style={[{}]}>
+                     <FontAwesome5 style={Style.inputFieldIcons} name="user-lock" size={20} color="black" />
+                  </View>
+
                   <TextInput
                     style={Style.inputFieldText}
                     placeholder='Password'
@@ -118,7 +128,7 @@ export default function SignUpScreen({ navigation }: any) {
 
                 <View style={Style.inputField}>
 
-                    <MaterialIcon name='lock' size={24} />
+                    <AntDesign style={Style.inputFieldIcons} name="checkcircle" size={24} color="black" />
                     <TextInput
                       style={Style.inputFieldText}
                       placeholder='Confirm Password'
@@ -147,6 +157,7 @@ export default function SignUpScreen({ navigation }: any) {
               </TouchableOpacity>
             </View>
 
+          </ScrollView>
     </SafeAreaView>
   )
 }

@@ -6,7 +6,6 @@ const auth = getAuth();
 export function useAuth() {
     const [user, setUser] = React.useState<User>();
 
-
     useEffect( () => {
         const unsubscribeFromAuthStateChanged = onAuthStateChanged(auth, (user) => {
             if (user) {
@@ -15,7 +14,6 @@ export function useAuth() {
                 setUser(undefined)
             }
         });
-
         return unsubscribeFromAuthStateChanged;
 
     }, []);

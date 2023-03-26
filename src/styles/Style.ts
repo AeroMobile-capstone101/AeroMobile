@@ -7,17 +7,21 @@ export default StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        paddingHorizontal: 32
+        paddingHorizontal: 24
       },
       componentContainer: {
         width:'100%', 
         alignItems: 'center' 
       },
+      // button global styling
+      buttonDisabled: {
+        display: 'none'
+      },
       button: {
         width: '100%',
         paddingVertical: 18,
         alignItems: 'center',
-        borderRadius: 100,
+        borderRadius: 10,
       },
       buttonSolid:{
         backgroundColor: Colors.Accent.color,
@@ -28,26 +32,25 @@ export default StyleSheet.create({
         color: "black",
       },
       buttonText: {
-        fontSize: 16,
+        fontSize: 15,
         fontWeight: 'bold'
       },
 
        // header text styling
       headerContainer: {
-        flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
         width: '100%'
       },
       headerText: {
         fontSize: 32,
-        fontWeight: 'bold',
-        lineHeight: 60
+        fontWeight: '900',
+        lineHeight: 64
       },
       pText: {
-        fontSize: 12,
+        fontSize: 13,
         textAlign: "center",
-        fontWeight: "600"
+        fontWeight: "600",
        },
 
          // back button styling
@@ -60,18 +63,18 @@ export default StyleSheet.create({
 
       // inputField Styling
       inputFieldContainer: {
-        flex: 1,
         width: '100%',
         justifyContent: 'flex-start'
       },
       inputField: {
         alignItems: "center",
         flexDirection: 'row',
-        paddingVertical: 16,
-        paddingHorizontal: 16,
+        justifyContent: "space-between",
+        paddingVertical: 15,
+        paddingHorizontal: 15,
         backgroundColor: "#fff",
-        marginBottom: 8,
-        borderRadius: 100,
+        marginBottom: 10,
+        borderRadius: 10,
         borderWidth: 1,
         borderColor: "black"
       },
