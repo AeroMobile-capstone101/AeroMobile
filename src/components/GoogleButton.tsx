@@ -9,7 +9,7 @@ const GoogleButton = () => {
       style={[styles.button, { backgroundColor: "rgba(23,160,141,.1)" }]}>
       <AntDesign name='google' size={24} color='black' />
       <Text style={[styles.buttonText, { color: Colors.Black.color }]}>
-        Log in with Google
+        Login with Google
       </Text>
     </TouchableOpacity>
   )
@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
   },
   button: {
     width: "100%",
-    paddingVertical: 18,
+    paddingVertical: 16,
     alignItems: "center",
     flexDirection: "row",
     justifyContent: "center",

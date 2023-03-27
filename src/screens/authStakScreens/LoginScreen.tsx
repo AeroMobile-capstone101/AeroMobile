@@ -73,9 +73,9 @@ export default function LogInScreen({ navigation }: any) {
         <View style={[Style.headerContainer]}>
           <Image
             source={require("../../assets/images/AeroHouse.png")}
-            style={{ width: 150, height: 150, marginTop: 40 }}
+            style={{ width: 140, height: 140, marginTop: 40 }}
           />
-          <Text style={[Style.headerText, [{ marginTop: 24 }]]}>Log in</Text>
+          <Text style={[Style.headerText, [{ marginTop: 16 }]]}>Log in</Text>
         </View>
 
         {/* ---------------- username and password field ----------------------  */}
@@ -117,15 +117,15 @@ export default function LogInScreen({ navigation }: any) {
 
         {/* ---------------- Login and Create accout Button----------------------  */}
 
-        <View style={styles.buttonContainer}>
-          <SolidButton name='Log In' func={handleSignIn} />
+        <View style={[styles.buttonContainer, { marginTop: 24 }]}>
+          <SolidButton name='Login' func={handleSignIn} />
 
           <Text
             style={{
               textAlign: "center",
               marginVertical: 8,
               fontSize: 15,
-              fontWeight: "700",
+              fontWeight: "400",
             }}>
             or
           </Text>
@@ -133,13 +133,12 @@ export default function LogInScreen({ navigation }: any) {
           <GoogleButton />
         </View>
 
-        <View>
-          <Text>
-            Don't have an account?
-            <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
-              <Text>Register</Text>
-            </TouchableOpacity>
-          </Text>
+        <View
+          style={[Style.container, { marginTop: 24, flexDirection: "row" }]}>
+          <Text style={[{ marginRight: 8 }]}>Don't have an account?</Text>
+          <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
+            <Text style={{ color: Colors.Accent.color }}>Register</Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </SafeAreaView>
