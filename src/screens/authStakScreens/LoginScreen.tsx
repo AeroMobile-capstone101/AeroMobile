@@ -11,7 +11,6 @@ import { useEffect, useState } from "react"
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth"
 
 import { MaterialIcons } from "@expo/vector-icons"
-import { AntDesign } from "@expo/vector-icons"
 import { Entypo } from "@expo/vector-icons"
 
 import Style from "../../styles/Style"
@@ -53,11 +52,17 @@ export default function LogInScreen({ navigation }: any) {
     try {
       await signInWithEmailAndPassword(auth, value.email, value.password)
     } catch (error: any) {
+      let message =
+        error.message.toLowerCase() === "firebase: error (auth/invalid-email)."
+          ? "Invalid Email"
+          : "Invalid Password"
+
       setValue({
         ...value,
-        error: error.message,
+        error: message,
       })
-      console.debug(error.message)
+
+      console.debug(error.message.toLowerCase())
     }
   }
 
@@ -102,7 +107,6 @@ export default function LogInScreen({ navigation }: any) {
               value={value.password}
               onChangeText={(text) => setValue({ ...value, password: text })}
             />
-
             <Entypo
               name={showPass ? "eye" : "eye-with-line"}
               size={24}

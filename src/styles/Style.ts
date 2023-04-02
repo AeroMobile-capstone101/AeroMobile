@@ -70,8 +70,8 @@ export default StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
 
-    paddingVertical: 15,
-    paddingHorizontal: 15,
+    paddingVertical: 14,
+    paddingHorizontal: 14,
     backgroundColor: "#fff",
     marginBottom: 10,
 
@@ -82,7 +82,6 @@ export default StyleSheet.create({
   inputFieldText: {
     width: "90%",
     fontSize: 16,
-    fontWeight: "bold",
   },
   inputFieldIcons: {
     marginRight: 8,

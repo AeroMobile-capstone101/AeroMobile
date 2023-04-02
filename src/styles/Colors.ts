@@ -1,14 +1,16 @@
-import {StyleSheet} from 'react-native';
+import { StyleSheet } from "react-native"
 
 export default StyleSheet.create({
-   White:{
-        color: '#efefef'
-    },
-    Black: {
-        color: '#171819'
-    },
-    Accent: {
-        color: '#17A08D'
-    }
-
+  White: {
+    color: "#efefef",
+  },
+  Black: {
+    color: "#171819",
+  },
+  Accent: {
+    color: "#17A08D",
+  },
+  AccentTransparent: {
+    color: "rgba(23,160,141,.5)",
+  },
 })
