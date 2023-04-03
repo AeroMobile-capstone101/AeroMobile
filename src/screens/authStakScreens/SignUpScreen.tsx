@@ -2,7 +2,6 @@ import { View, SafeAreaView, Text, TextInput, Image } from "react-native"
 import { useState } from "react"
 
 import { AntDesign } from "@expo/vector-icons"
-import { FontAwesome5 } from "@expo/vector-icons"
 import { MaterialIcons } from "@expo/vector-icons"
 import { Entypo } from "@expo/vector-icons"
 
@@ -12,6 +11,9 @@ import { getAuth, createUserWithEmailAndPassword } from "firebase/auth"
 import { ScrollView } from "react-native-gesture-handler"
 import SolidButton from "../../components/SolidButton"
 import GoogleButton from "../../components/GoogleButton"
+
+import { doc, setDoc, getFirestore } from "firebase/firestore"
+import db from "../../config/firebase"
 
 // import * as Linking from "expo-linking"
 
@@ -27,14 +29,7 @@ export default function SignUpScreen({ navigation }: any) {
   })
 
   const [showPass, setShowPass] = useState(true)
-
   const [confirmPass, setConfirmPass] = useState("")
-
-  // const url = Linking.createURL("Login", { queryParams: { hello: "miko" } });
-  // const actionCodeSettings = {
-  //   url: url,
-  //   handleCodeInApp: true
-  // }
 
   // handles signing to firebase asynchronously
   async function handleSignUp() {
@@ -43,19 +38,20 @@ export default function SignUpScreen({ navigation }: any) {
     }
 
     try {
-      await createUserWithEmailAndPassword(auth, value.email, value.password)
-      // navigation.navigate("LogIn");
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        value.email,
+        value.password
+      )
 
-      // await sendSignInLinkToEmail(auth, value.email, actionCodeSettings)
-      //   .then(() => console.debug("success"))
-      //   .catch((error) => {
-      //     console.debug(error);
-      //   })
-      // console.debug(url)
+      const usersRef = doc(db, "users", userCredential.user.uid)
+      await setDoc(usersRef, {
+        user_params: { email: value.email, password: value.password },
+      })
     } catch (error: any) {
       setValue({
         ...value,
-        error: "Unable to Connect to Server! ",
+        error: error.message,
       })
     }
   }
