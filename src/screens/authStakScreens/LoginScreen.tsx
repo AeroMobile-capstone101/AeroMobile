@@ -78,17 +78,19 @@ export default function LogInScreen({ navigation }: any) {
         <View style={[Style.headerContainer]}>
           <Image
             source={require("../../assets/images/AeroHouse.png")}
-            style={{ width: 140, height: 140, marginTop: 40 }}
+            style={{ width: 120, height: 120, marginTop: 40 }}
           />
-          <Text style={[Style.headerText, [{ marginTop: 16 }]]}>Log in</Text>
+          <Text style={[Style.headerText, [{ marginTop: 8 }]]}>Log in</Text>
+          <Text style={Style.pText}>Provide your details to login.</Text>
         </View>
 
         {/* ---------------- username and password field ----------------------  */}
-        <View style={[Style.inputFieldContainer, { marginBottom: "5%" }]}>
+        <View style={[Style.inputFieldContainer, { marginTop: 24 }]}>
           <Text style={Style.errorMessage}>{value.error}</Text>
 
           <View style={Style.inputField}>
             <TextInput
+              style={Style.inputFieldText}
               placeholder='Email Address'
               value={value.email}
               onChangeText={(text) => setValue({ ...value, email: text })}
@@ -102,6 +104,7 @@ export default function LogInScreen({ navigation }: any) {
 
           <View style={Style.inputField}>
             <TextInput
+              style={Style.inputFieldText}
               placeholder='Password'
               secureTextEntry={showPass}
               value={value.password}

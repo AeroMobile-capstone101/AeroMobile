@@ -2,22 +2,25 @@
   "expo": {
     "name": "AeroMobile",
     "slug": "AeroMobile",
+    "description": "A Mobile App that Manages your AeroHouse System",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "",
+    "icon": "src/assets/images/logo/icon.png",
     "userInterfaceStyle": "light",
+    "splash": {
+      "image": "src/assets/images/splash1.png",
+      "resizeMode": "cover"
+    },
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "src/assets/images/logo/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       }
     },

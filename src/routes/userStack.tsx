@@ -3,8 +3,6 @@ import { NavigationContainer } from "@react-navigation/native"
 import { createStackNavigator } from "@react-navigation/stack"
 import HomePage from "../screens/userStackScreens/HomePage"
 
-const Stack = createStackNavigator()
-
 export default function UserStack() {
   return (
     <NavigationContainer>

@@ -47,7 +47,7 @@ export default StyleSheet.create({
     lineHeight: 64,
   },
   pText: {
-    fontSize: 13,
+    fontSize: 12,
     textAlign: "center",
     fontWeight: "600",
   },
@@ -70,7 +70,7 @@ export default StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
 
-    paddingVertical: 14,
+    paddingVertical: 15,
     paddingHorizontal: 14,
     backgroundColor: "#fff",
     marginBottom: 10,
@@ -81,7 +81,7 @@ export default StyleSheet.create({
   },
   inputFieldText: {
     width: "90%",
-    fontSize: 16,
+    fontWeight: "600",
   },
   inputFieldIcons: {
     marginRight: 8,

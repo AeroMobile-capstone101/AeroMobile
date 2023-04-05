@@ -1,5 +1,4 @@
 import React from "react"
-import { View, Text, Button } from "react-native"
 
 import { createDrawerNavigator } from "@react-navigation/drawer"
 import AeroHouse from "./AeroHouse"

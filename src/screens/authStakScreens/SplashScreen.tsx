@@ -2,10 +2,8 @@ import React, { useCallback, useState } from "react"
 import {
   View,
   Text,
-  TouchableOpacity,
   Image,
   StyleSheet,
-  BackHandler,
 } from "react-native"
 import Style from "../../styles/Style"
 import Colors from "../../styles/Colors"

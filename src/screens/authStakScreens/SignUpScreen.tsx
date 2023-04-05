@@ -1,4 +1,11 @@
-import { View, SafeAreaView, Text, TextInput, Image } from "react-native"
+import {
+  View,
+  SafeAreaView,
+  Text,
+  TextInput,
+  Image,
+  TouchableOpacity,
+} from "react-native"
 import { useState } from "react"
 
 import { AntDesign } from "@expo/vector-icons"
@@ -6,13 +13,14 @@ import { MaterialIcons } from "@expo/vector-icons"
 import { Entypo } from "@expo/vector-icons"
 
 import Style from "../../styles/Style"
+import Colors from "../../styles/Colors"
 
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth"
 import { ScrollView } from "react-native-gesture-handler"
 import SolidButton from "../../components/SolidButton"
 import GoogleButton from "../../components/GoogleButton"
 
-import { doc, setDoc, getFirestore } from "firebase/firestore"
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth"
+import { doc, setDoc } from "firebase/firestore"
 import db from "../../config/firebase"
 
 // import * as Linking from "expo-linking"
@@ -75,12 +83,12 @@ export default function SignUpScreen({ navigation }: any) {
       <ScrollView
         style={[{ width: "100%" }]}
         showsVerticalScrollIndicator={false}>
-        <View style={[Style.headerContainer, { marginBottom: "0%" }]}>
+        <View style={[Style.headerContainer]}>
           <Image
             source={require("../../assets/images/AeroHouse.png")}
-            style={{ width: 140, height: 140, marginTop: 40 }}
+            style={{ width: 120, height: 120, marginTop: 40 }}
           />
-          <Text style={[Style.headerText, [{ marginTop: 16 }]]}>
+          <Text style={[Style.headerText, [{ marginTop: 8 }]]}>
             Create Account
           </Text>
           <Text style={Style.pText}>Provide your details to sign up.</Text>
@@ -93,6 +101,7 @@ export default function SignUpScreen({ navigation }: any) {
 
           <View style={Style.inputField}>
             <TextInput
+              style={Style.inputFieldText}
               placeholder='Email Address'
               value={value.email}
               onChangeText={(text) => setValue({ ...value, email: text })}
@@ -106,6 +115,7 @@ export default function SignUpScreen({ navigation }: any) {
 
           <View style={Style.inputField}>
             <TextInput
+              style={Style.inputFieldText}
               placeholder='Password'
               secureTextEntry={showPass}
               value={value.password}
@@ -125,6 +135,7 @@ export default function SignUpScreen({ navigation }: any) {
 
           <View style={Style.inputField}>
             <TextInput
+              style={Style.inputFieldText}
               placeholder='Confirm Password'
               secureTextEntry={false}
               value={confirmPass}
@@ -155,6 +166,14 @@ export default function SignUpScreen({ navigation }: any) {
             or
           </Text>
           <GoogleButton />
+
+          <View
+            style={[Style.container, { marginTop: 24, flexDirection: "row" }]}>
+            <Text style={[{ marginRight: 8 }]}>Already have an account?</Text>
+            <TouchableOpacity onPress={() => navigation.navigate("LogIn")}>
+              <Text style={{ color: Colors.Accent.color }}>Log in</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </ScrollView>
     </SafeAreaView>
