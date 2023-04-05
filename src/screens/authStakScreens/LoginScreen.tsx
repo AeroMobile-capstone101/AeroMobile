@@ -73,7 +73,9 @@ export default function LogInScreen({ navigation }: any) {
   //  ---------------------------------------------
   return (
     <SafeAreaView style={[Style.container]}>
-      <ScrollView style={{ width: "100%" }}>
+      <ScrollView
+        style={{ width: "100%" }}
+        showsHorizontalScrollIndicator={false}>
         {/* ---------------- Header Text ----------------------  */}
         <View style={[Style.headerContainer]}>
           <Image

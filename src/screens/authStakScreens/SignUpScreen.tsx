@@ -81,6 +81,7 @@ export default function SignUpScreen({ navigation }: any) {
   return (
     <SafeAreaView style={Style.container}>
       <ScrollView
+        showsHorizontalScrollIndicator={false}
         style={[{ width: "100%" }]}
         showsVerticalScrollIndicator={false}>
         <View style={[Style.headerContainer]}>
@@ -168,7 +169,10 @@ export default function SignUpScreen({ navigation }: any) {
           <GoogleButton />
 
           <View
-            style={[Style.container, { marginTop: 24, flexDirection: "row" }]}>
+            style={[
+              Style.container,
+              { marginTop: 24, marginBottom: 24, flexDirection: "row" },
+            ]}>
             <Text style={[{ marginRight: 8 }]}>Already have an account?</Text>
             <TouchableOpacity onPress={() => navigation.navigate("LogIn")}>
               <Text style={{ color: Colors.Accent.color }}>Log in</Text>
