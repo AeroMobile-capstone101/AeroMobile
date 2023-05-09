@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
     width: "100%",
     paddingVertical: 16,
     alignItems: "center",
-    borderRadius: 10,
+    borderRadius: 5,
   },
   buttonSolid: {
     backgroundColor: Colors.Accent.color,
@@ -36,6 +36,6 @@ const styles = StyleSheet.create({
   buttonText: {
     color: Colors.White.color,
     fontSize: 15,
-    fontWeight: "bold",
+    fontFamily: "font-md",
   },
 })

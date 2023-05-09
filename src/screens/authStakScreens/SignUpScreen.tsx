@@ -12,7 +12,7 @@ import { AntDesign } from "@expo/vector-icons"
 import { MaterialIcons } from "@expo/vector-icons"
 import { Entypo } from "@expo/vector-icons"
 
-import Style from "../../styles/Style"
+import Style from "../../styles/GlobalStyle"
 import Colors from "../../styles/Colors"
 
 import { ScrollView } from "react-native-gesture-handler"
@@ -39,6 +39,10 @@ export default function SignUpScreen({ navigation }: any) {
   const [showPass, setShowPass] = useState(true)
   const [confirmPass, setConfirmPass] = useState("")
 
+  let month = new Date().getMonth() + 1
+  let day = new Date().getDay()
+  let year = new Date().getFullYear()
+
   // handles signing to firebase asynchronously
   async function handleSignUp() {
     if (!inputValidated()) {
@@ -53,8 +57,15 @@ export default function SignUpScreen({ navigation }: any) {
       )
 
       const usersRef = doc(db, "users", userCredential.user.uid)
+
       await setDoc(usersRef, {
-        user_params: { email: value.email, password: value.password },
+        user_params: {
+          email: value.email,
+          password: value.password,
+          firstname: "update firstname",
+          lastname: "update lastname",
+          created_at: `${month}-${day}-${year}`,
+        },
       })
     } catch (error: any) {
       setValue({
@@ -81,13 +92,12 @@ export default function SignUpScreen({ navigation }: any) {
   return (
     <SafeAreaView style={Style.container}>
       <ScrollView
-        showsHorizontalScrollIndicator={false}
-        style={[{ width: "100%" }]}
+        style={{ width: "100%", paddingHorizontal: 24 }}
         showsVerticalScrollIndicator={false}>
         <View style={[Style.headerContainer]}>
           <Image
             source={require("../../assets/images/AeroHouse.png")}
-            style={{ width: 120, height: 120, marginTop: 40 }}
+            style={{ width: 120, height: 120, marginTop: 50 }}
           />
           <Text style={[Style.headerText, [{ marginTop: 8 }]]}>
             Create Account
@@ -97,7 +107,7 @@ export default function SignUpScreen({ navigation }: any) {
 
         {/* ---------------- input field ----------------------  */}
 
-        <View style={[Style.inputFieldContainer, { marginBottom: "5%" }]}>
+        <View style={[Style.inputFieldContainer, { marginBottom: 30 }]}>
           <Text style={Style.errorMessage}>{value.error}</Text>
 
           <View style={Style.inputField}>
@@ -157,25 +167,22 @@ export default function SignUpScreen({ navigation }: any) {
         <View style={{ flex: 1.2, width: "100%" }}>
           <SolidButton name='Sign Up' func={handleSignUp} />
 
-          <Text
-            style={{
-              textAlign: "center",
-              marginVertical: 8,
-              fontSize: 15,
-              fontWeight: "400",
-            }}>
-            or
-          </Text>
-          <GoogleButton />
-
           <View
             style={[
               Style.container,
-              { marginTop: 24, marginBottom: 24, flexDirection: "row" },
+              { marginTop: 24, paddingBottom: 24, flexDirection: "row" },
             ]}>
-            <Text style={[{ marginRight: 8 }]}>Already have an account?</Text>
+            <Text style={[{ marginRight: 8, fontFamily: "font-reg" }]}>
+              Already have an account?
+            </Text>
             <TouchableOpacity onPress={() => navigation.navigate("LogIn")}>
-              <Text style={{ color: Colors.Accent.color }}>Log in</Text>
+              <Text
+                style={{
+                  color: Colors.Accent.color,
+                  fontFamily: "font-reg",
+                }}>
+                Log in
+              </Text>
             </TouchableOpacity>
           </View>
         </View>

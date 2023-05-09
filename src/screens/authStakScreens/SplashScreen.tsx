@@ -1,11 +1,6 @@
 import React, { useCallback, useState } from "react"
-import {
-  View,
-  Text,
-  Image,
-  StyleSheet,
-} from "react-native"
-import Style from "../../styles/Style"
+import { View, Text, Image, StyleSheet } from "react-native"
+import Style from "../../styles/GlobalStyle"
 import Colors from "../../styles/Colors"
 import SolidButton from "../../components/SolidButton"
 import { WhiteButton } from "../../components/components"

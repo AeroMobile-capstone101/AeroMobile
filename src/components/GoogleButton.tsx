@@ -7,10 +7,7 @@ const GoogleButton = () => {
   return (
     <TouchableOpacity
       style={[styles.button, { backgroundColor: "rgba(23,160,141,.1)" }]}>
-      <AntDesign name='google' size={24} color='black' />
-      <Text style={[styles.buttonText, { color: Colors.Black.color }]}>
-        Login with Google
-      </Text>
+      <AntDesign name='google' size={20} color='black' />
     </TouchableOpacity>
   )
 }
@@ -23,7 +20,8 @@ const styles = StyleSheet.create({
     display: "none",
   },
   button: {
-    width: "100%",
+    width: 55,
+    height: 55,
     paddingVertical: 16,
     alignItems: "center",
     flexDirection: "row",
@@ -36,7 +34,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: Colors.White.color,
     fontSize: 15,
-    fontWeight: "700",
+    fontFamily: "font-md",
     marginLeft: 20,
   },
 })

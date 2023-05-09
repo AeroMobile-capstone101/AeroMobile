@@ -13,12 +13,12 @@ import { getAuth, signInWithEmailAndPassword } from "firebase/auth"
 import { MaterialIcons } from "@expo/vector-icons"
 import { Entypo } from "@expo/vector-icons"
 
-import Style from "../../styles/Style"
+import Style from "../../styles/GlobalStyle"
 import Colors from "../../styles/Colors"
 import { SafeAreaView } from "react-native-safe-area-context"
 import { ScrollView } from "react-native-gesture-handler"
 
-import { SolidButton, GoogleButton } from "../../components/components"
+import { SolidButton } from "../../components/components"
 
 // ---------------------------------------------------
 export default function LogInScreen({ navigation }: any) {
@@ -74,20 +74,20 @@ export default function LogInScreen({ navigation }: any) {
   return (
     <SafeAreaView style={[Style.container]}>
       <ScrollView
-        style={{ width: "100%" }}
-        showsHorizontalScrollIndicator={false}>
+        style={[{ width: "100%", paddingHorizontal: 24 }]}
+        showsVerticalScrollIndicator={false}>
         {/* ---------------- Header Text ----------------------  */}
         <View style={[Style.headerContainer]}>
           <Image
             source={require("../../assets/images/AeroHouse.png")}
-            style={{ width: 120, height: 120, marginTop: 40 }}
+            style={{ width: 120, height: 120, marginTop: 50 }}
           />
-          <Text style={[Style.headerText, [{ marginTop: 8 }]]}>Log in</Text>
+          <Text style={[Style.headerText, { marginTop: 10 }]}>Log in</Text>
           <Text style={Style.pText}>Provide your details to login.</Text>
         </View>
 
         {/* ---------------- username and password field ----------------------  */}
-        <View style={[Style.inputFieldContainer, { marginTop: 24 }]}>
+        <View style={[Style.inputFieldContainer, { marginBottom: 30 }]}>
           <Text style={Style.errorMessage}>{value.error}</Text>
 
           <View style={Style.inputField}>
@@ -126,27 +126,23 @@ export default function LogInScreen({ navigation }: any) {
 
         {/* ---------------- Login and Create accout Button----------------------  */}
 
-        <View style={[styles.buttonContainer, { marginTop: 24 }]}>
+        <View style={[styles.buttonContainer]}>
           <SolidButton name='Login' func={handleSignIn} />
-
-          <Text
-            style={{
-              textAlign: "center",
-              marginVertical: 8,
-              fontSize: 15,
-              fontWeight: "400",
-            }}>
-            or
-          </Text>
-
-          <GoogleButton />
         </View>
 
         <View
-          style={[Style.container, { marginTop: 24, flexDirection: "row" }]}>
-          <Text style={[{ marginRight: 8 }]}>Don't have an account?</Text>
+          style={[
+            Style.container,
+            { marginTop: 20, paddingBottom: 10, flexDirection: "row" },
+          ]}>
+          <Text style={{ marginRight: 8, fontFamily: "font-reg" }}>
+            Don't have an account?
+          </Text>
           <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
-            <Text style={{ color: Colors.Accent.color }}>Register</Text>
+            <Text
+              style={{ color: Colors.Accent.color, fontFamily: "font-reg" }}>
+              Register
+            </Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
