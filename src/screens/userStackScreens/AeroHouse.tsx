@@ -1,19 +1,15 @@
 import { View, Text, ScrollView, StyleSheet, TextInput } from "react-native"
-import { useEffect, useState } from "react"
+import { useEffect, useLayoutEffect, useState } from "react"
 import Style from "../../styles/GlobalStyle"
 import SolidButton from "../../components/SolidButton"
 import SystemCard from "../../components/aerohouse/SystemCard"
 
 import {
   doc,
-  collection,
   updateDoc,
-  query,
-  onSnapshot,
-  deleteDoc,
   getDoc,
   arrayUnion,
-  arrayRemove,
+  onSnapshot,
 } from "firebase/firestore"
 import { useAuth } from "../../hooks/useAuth"
 import db from "../../config/firebase"
@@ -27,61 +23,47 @@ interface systemParams {
 }
 
 const AeroHouse = () => {
-  const [sysData, setSysData] = useState<systemParams[]>([])
-  const [loading, setLoading] = useState(true)
   const userID = useAuth().user?.uid
   const userDbRef = doc(db, "users", `${userID}`)
-  // const systemRef = query(collection(userDbRef, "aero_systems")) // used to query in subcollection
+
+  const [sysData, setSysData] = useState([{}])
+  const [loading, setLoading] = useState(false)
+ 
 
   const [snackbar, setSnackBar] = useState({
     isShown: false,
     title: "",
   })
   const [showModal, setShowModal] = useState(false)
-  const [systemID, setSystemID] = useState("")
-  const [systemName, setSystemName] = useState("")
+  const [systemDetails, setSystemDetails] = useState({
+    sysID: '',
+    sysName: ''
+  })
 
-  // useEffect to query the created systems
-  useEffect(() => {
-    const fetchSystems = onSnapshot(userDbRef, (systemSnapshot) => {
-      const sysDataArr = []
-      const data = systemSnapshot.data()?.systems
-
-      try {
-        for (let i = 0; i < data.length; i++) {
-          sysDataArr.push({
-            sysID: data[i].sysID,
-            sysName: data[i].sysName,
-          })
-        }
-      } catch (e) {
-        setTimeout(() => {
-          setLoading(true)
-        }, 200)
-      }
-      setSysData(sysDataArr)
-    })
-
-    //  setSysData(systems)
-    setLoading(false)
-
-    return () => {
-      fetchSystems()
+  async function getSystems() {
+    const docSnap = await getDoc(userDbRef)
+    console.log(docSnap.data())
+    if (docSnap.exists()) {
+      setSysData(docSnap.data()?.systems)
+      setLoading(false)
+    }else{
+      setLoading(!loading)
     }
+  }
+  useEffect(() => {
+    getSystems()
   }, [loading])
 
-  const handleSystemCheckAvailabiltyToFirestore = async (systemID: string) => {
-    // checking if the system exist
-    const docRef = doc(db, "systems", systemID)
-    const docSnap = await getDoc(docRef)
 
-    if (docSnap.exists()) {
-      // add the id to the user db
-      const sysName = docSnap.data().name
-      handleAddSystem(sysName, systemID)
-    } else {
-      console.log("No such system!")
-    }
+  async function isSystemInFirestoreDb () {
+
+  //  console.log(sysData.some((sys) => sys.sysID === systemDetails.sysID
+  //  ))
+   console.log('===========', sysData)
+   console.log('>>>>>>>>>>>', systemDetails)
+  }
+  const handleSystemCheckAvailabiltyToFirestore = async (systemID: string) => {
+    console.log('sysID', systemID);
   }
 
   async function handleAddSystem(name: string, ID: string) {
@@ -97,81 +79,85 @@ const AeroHouse = () => {
     }
   }
 
-
-  if (loading) {
-    return (
+  return (
+    loading
+      ?
       <View style={Style.container}>
         <Text>Loading...</Text>
       </View>
-    )
-  }
+      :
 
-  return (
-    <SafeAreaView style={[Style.container, { paddingHorizontal: 20 }]}>
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        style={{ width: "100%" }}>
-        <Text style={styles.pageTitle}>AeroHouse Devices</Text>
+      <SafeAreaView style={[Style.container, { paddingHorizontal: 20 }]}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          style={{ width: "100%" }}>
+          <Text style={styles.pageTitle}>AeroHouse Devices</Text>
 
-        {sysData.length !== 0 ? (
-          sysData.map((data, index) => (
-            <SystemCard data={data} index={index} key={index} />
-          ))
-        ) : (
-          <View style={styles.emptyContainer}>
-            <Text> No Available Systems. </Text>
-            <Text> Click the + button to add. </Text>
+          {sysData.length !== 0 ? (
+            sysData.map((data, index) => (
+              <SystemCard data={data} index={index} key={index} />
+            ))
+          ) : (
+            <View style={styles.emptyContainer}>
+              <Text> No Available Systems. </Text>
+              <Text> Click the + button to add. </Text>
+            </View>
+          )}
+
+          <View style={{ width: "100%", alignItems: "center", marginTop: 20 }}>
+            <View style={{ width: "30%" }}>
+              <SolidButton name='+' onPress={() => setShowModal(true)} />
+            </View>
           </View>
-        )}
+        </ScrollView>
 
-        <View style={{ width: "100%", alignItems: "center", marginTop: 20 }}>
-          <View style={{ width: "30%" }}>
-            <SolidButton name='+' func={() => setShowModal(true)} />
+        <Modal
+          visible={showModal}
+          onDismiss={() => setShowModal(false)}
+          contentContainerStyle={styles.modalContainerStyle}>
+          <Text style={styles.modalTitle}>Add System</Text>
+
+          <View style={{ width: "100%", marginBottom: 20 }}>
+            <Text style={styles.modalLabel}>System Name:</Text>
+            <View style={styles.inputContainer}>
+              <TextInput
+                style={styles.inputText}
+                value={systemDetails?.sysName}
+                onChangeText={(text) => setSystemDetails({
+                  ...systemDetails,
+                  sysName: text
+                })}
+                underlineColorAndroid='transparent'
+              />
+            </View>
+            <Text style={styles.modalLabel}>System ID:</Text>
+            <View style={styles.inputContainer}>
+              <TextInput
+                style={styles.inputText}
+                value={systemDetails?.sysID}
+                onChangeText={(text) => setSystemDetails({
+                  ...systemDetails,
+                  sysID: text
+                })}
+                underlineColorAndroid='transparent'
+              />
+            </View>
           </View>
-        </View>
-      </ScrollView>
+          <SolidButton
+            name='Add'
+            onPress={() => isSystemInFirestoreDb()}
+          />
+        </Modal>
 
-      <Modal
-        visible={showModal}
-        onDismiss={() => setShowModal(false)}
-        contentContainerStyle={styles.modalContainerStyle}>
-        <Text style={styles.modalTitle}>Add System</Text>
-
-        <View style={{ width: "100%", marginBottom: 20 }}>
-          <Text style={styles.modalLabel}>System Name:</Text>
-          <View style={styles.inputContainer}>
-            <TextInput
-              style={styles.inputText}
-              value={systemName}
-              onChangeText={(text) => setSystemName(text)}
-              underlineColorAndroid='transparent'
-            />
-          </View>
-          <Text style={styles.modalLabel}>System ID:</Text>
-          <View style={styles.inputContainer}>
-            <TextInput
-              style={styles.inputText}
-              value={systemID}
-              onChangeText={(text) => setSystemID(text)}
-              underlineColorAndroid='transparent'
-            />
-          </View>
-        </View>
-        <SolidButton
-          name='Add'
-          func={() => handleSystemCheckAvailabiltyToFirestore(systemID)}
-        />
-      </Modal>
-
-      <Snackbar
-        duration={1000}
-        visible={snackbar.isShown}
-        onDismiss={() => setSnackBar({ ...snackbar, isShown: false })}>
-        <Text style={{ textAlign: "center", color: Colors.White.color }}>
-          {snackbar.title}
-        </Text>
-      </Snackbar>
-    </SafeAreaView>
+        <Snackbar
+          duration={1000}
+          visible={snackbar.isShown}
+          onDismiss={() => setSnackBar({ ...snackbar, isShown: false })}>
+          <Text style={{ textAlign: "center", color: Colors.White.color }}>
+            {snackbar.title}
+          </Text>
+        </Snackbar>
+      </SafeAreaView>
   )
 }
 

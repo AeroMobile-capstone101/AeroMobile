@@ -1,52 +1,76 @@
-import React from "react"
-import { View, Text, Image, StyleSheet, TextInput } from "react-native"
+import React, { useState } from "react"
+import { View, Text, Image, StyleSheet } from "react-native"
 import Style from "../styles/GlobalStyle"
 import Colors from "../styles/Colors"
+import { TextInput } from "react-native-paper"
 
+import { useSelector, useDispatch } from 'react-redux'
+import { handleOffTime, handleOnTime } from "../redux/features/mistMakerSlice"
+import { RootState } from "../redux/app/store"
+import SolidButton from "./SolidButton"
+
+interface mistTimeFormat {
+  offTime: number,
+  onTime: number
+}
 export default function () {
-  const [mistStart, setMistStart] = React.useState("")
-  const [mistEnd, setMistEnd] = React.useState("")
+  const dispatch = useDispatch();
+  const timeValue = useSelector((state: RootState) => state.mistmaker)
+
+  const [time, setTime] = useState<mistTimeFormat>({
+    offTime: 0,
+    onTime: 0
+  })
+
   return (
     <View style={[Style.elevate, styles.cardContainer]}>
       <View>
         <Text style={[styles.cardTitle]}> Mist Maker Settings</Text>
 
-        <View style={{ marginTop: 24 }}>
-          <Text style={{ fontFamily: "font-md", fontSize: 15 }}>
-            Set Maker Interval
-          </Text>
+        <View style={{ marginTop: 24}}>
 
           <View style={styles.inputParentView}>
-            <Text style={styles.labelText}>On time: </Text>
-            <View style={styles.mistCont}>
-              <TextInput
-                keyboardType='number-pad'
-                style={styles.inputText}
-                placeholder='5sec'
-                value={mistStart}
-                onChangeText={(text) => setMistStart(text)}
-              />
-            </View>
+            <TextInput
+              mode="outlined"
+              keyboardType='number-pad'
+              label='On Time'
+              value={time.onTime === 0 ? '' : `${time.onTime}`}
+              onChangeText={(value) => setTime({...time, onTime: Number(value) })}
+              activeOutlineColor={Colors.Accent.color}
+              style={styles.inputText}
+            />
           </View>
 
           <View style={styles.inputParentView}>
-            <Text style={styles.labelText}>Off time: </Text>
-            <View style={styles.mistCont}>
-              <TextInput
-                keyboardType='numeric'
-                style={styles.inputText}
-                placeholder='5sec'
-                value={mistEnd}
-                onChangeText={(text) => setMistEnd(text)}
-              />
-            </View>
+
+            <TextInput
+              mode="outlined"
+              keyboardType='numeric'
+              label='Off Time'
+              value={time.offTime === 0 ? '' : `${time.offTime}`}
+              onChangeText={(value) => setTime({...time, offTime: Number(value) })}
+              activeOutlineColor={Colors.Accent.color}
+              style={styles.inputText}
+            />
+
+          </View>
+
+          <View style={[styles.inputParentView, {marginTop: 20}]}>
+            <SolidButton
+              name={'Set'}
+              onPress={() => {
+                dispatch(handleOffTime(time.offTime))
+                dispatch(handleOnTime(time.onTime))
+                console.log(timeValue)
+              }}
+            />
           </View>
         </View>
       </View>
       <View>
         <Image
           source={require("../assets/images/hardwares/Humidifier.png")}
-          style={{ height: 200, width: 90 }}
+          style={{ height: 215, width: 100 }}
         />
       </View>
     </View>
@@ -55,7 +79,7 @@ export default function () {
 const styles = StyleSheet.create({
   cardContainer: {
     backgroundColor: Colors.White.color,
-    padding: 15,
+    padding: 20,
     borderRadius: 10,
     flexDirection: "row",
     justifyContent: "space-between",
@@ -65,7 +89,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
   inputParentView: {
-    marginTop: 10,
+    marginTop: 5,
   },
   mistCont: {
     width: "60%",
@@ -73,11 +97,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 3,
     borderRadius: 5,
     borderWidth: 2,
-    borderColor: "gray",
   },
   inputText: {
-    fontFamily: "font-reg",
-    paddingHorizontal: 5,
+    fontSize: 13,
+    height: 45,
+    backgroundColor: Colors.White.color
   },
   labelText: {
     fontFamily: "font-md",

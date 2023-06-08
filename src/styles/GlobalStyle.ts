@@ -7,6 +7,7 @@ export default StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#efefefef",
+    paddingHorizontal: 15
   },
   componentContainer: {
     width: "100%",

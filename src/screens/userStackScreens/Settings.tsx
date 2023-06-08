@@ -4,8 +4,6 @@ import {
   Text,
   ScrollView,
   StyleSheet,
-  TouchableOpacity,
-  TouchableOpacityBase,
 } from "react-native"
 import SolidButton from "../../components/SolidButton"
 import { signOut, getAuth } from "firebase/auth"

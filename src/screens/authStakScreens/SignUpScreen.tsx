@@ -17,13 +17,11 @@ import Colors from "../../styles/Colors"
 
 import { ScrollView } from "react-native-gesture-handler"
 import SolidButton from "../../components/SolidButton"
-import GoogleButton from "../../components/GoogleButton"
 
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth"
 import { doc, setDoc } from "firebase/firestore"
 import db from "../../config/firebase"
 
-// import * as Linking from "expo-linking"
 
 // --------component-------
 export default function SignUpScreen({ navigation }: any) {

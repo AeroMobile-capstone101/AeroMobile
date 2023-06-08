@@ -7,9 +7,14 @@ import { useCallback, useEffect, useState } from "react"
 import * as SplashScreen from "expo-splash-screen"
 import { useFonts } from "expo-font"
 
+import store from "./src/redux/app/store"
+import { Provider } from 'react-redux'
+
 SplashScreen.preventAutoHideAsync()
 
 export default function App() {
+
+
   const [appIsReady, setAppIsReady] = useState(false)
 
   useFonts({
@@ -46,9 +51,11 @@ export default function App() {
 
   return (
     <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
-      <PaperProvider>
-        <RootNavigation />
-      </PaperProvider>
+      <Provider store={store} >
+        <PaperProvider>
+          <RootNavigation />
+        </PaperProvider>
+      </Provider>
     </View>
   )
 }

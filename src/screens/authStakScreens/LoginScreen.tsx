@@ -76,6 +76,7 @@ export default function LogInScreen({ navigation }: any) {
       <ScrollView
         style={[{ width: "100%", paddingHorizontal: 24 }]}
         showsVerticalScrollIndicator={false}>
+          
         {/* ---------------- Header Text ----------------------  */}
         <View style={[Style.headerContainer]}>
           <Image

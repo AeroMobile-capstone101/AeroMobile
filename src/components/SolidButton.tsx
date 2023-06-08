@@ -2,17 +2,14 @@ import React from "react"
 import { Text, StyleSheet, TouchableOpacity } from "react-native"
 import Colors from "../styles/Colors"
 
-type propsVal = {
-  name: string
-  func: any
-}
 
-const SolidButton = ({ name, func }: propsVal) => {
+const SolidButton = (props: any) => {
   return (
     <TouchableOpacity
       style={[styles.button, styles.buttonSolid]}
-      onPress={func}>
-      <Text style={[styles.buttonText]}>{name}</Text>
+      onPress={props.onPress}
+      >
+      <Text style={[styles.buttonText]}>{props.name}</Text>
     </TouchableOpacity>
   )
 }
