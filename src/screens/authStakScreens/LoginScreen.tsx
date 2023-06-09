@@ -69,7 +69,6 @@ export default function LogInScreen({ navigation }: any) {
   useEffect(() => {
     console.debug(value.error)
   }, [value.error])
-
   //  ---------------------------------------------
   return (
     <SafeAreaView style={[Style.container]}>
@@ -128,7 +127,7 @@ export default function LogInScreen({ navigation }: any) {
         {/* ---------------- Login and Create accout Button----------------------  */}
 
         <View style={[styles.buttonContainer]}>
-          <SolidButton name='Login' func={handleSignIn} />
+          <SolidButton name='Login' onPress={handleSignIn} />
         </View>
 
         <View

@@ -69,7 +69,7 @@ const Settings = () => {
       </TouchableWithoutFeedback>
 
       <View style={customStyles.button}>
-        <SolidButton name='Logout' func={() => signOut(auth)} />
+        <SolidButton name='Logout' onPress={() => signOut(auth)} />
       </View>
     </ScrollView>
   )

@@ -15,7 +15,10 @@ import { useAuth } from "../../hooks/useAuth"
 import db from "../../config/firebase"
 import { SafeAreaView } from "react-native-safe-area-context"
 import Colors from "../../styles/Colors"
-import { Modal, Snackbar } from "react-native-paper"
+import { Modal, Snackbar, FAB } from "react-native-paper"
+
+import { useSelector, useDispatch } from "react-redux"
+import { RootState } from "../../redux/app/store"
 
 interface systemParams {
   sysID: string
@@ -23,57 +26,52 @@ interface systemParams {
 }
 
 const AeroHouse = () => {
+
+  const dispatch = useDispatch();
+  const systems = useSelector((state: RootState) => state.aerohouse.aeroHouse)
+
   const userID = useAuth().user?.uid
   const userDbRef = doc(db, "users", `${userID}`)
 
-  const [sysData, setSysData] = useState([{}])
   const [loading, setLoading] = useState(false)
- 
 
   const [snackbar, setSnackBar] = useState({
     isShown: false,
     title: "",
   })
+
   const [showModal, setShowModal] = useState(false)
-  const [systemDetails, setSystemDetails] = useState({
-    sysID: '',
-    sysName: ''
-  })
+  const [systemID, setSystemID] = useState('')
 
-  async function getSystems() {
-    const docSnap = await getDoc(userDbRef)
-    console.log(docSnap.data())
-    if (docSnap.exists()) {
-      setSysData(docSnap.data()?.systems)
-      setLoading(false)
-    }else{
-      setLoading(!loading)
+  async function handleAddSystem(ID: string) {
+    if(ID === ''){
+      console.log('Cannot be empty')
+      return
     }
-  }
-  useEffect(() => {
-    getSystems()
-  }, [loading])
 
+    const systemRef = doc(db, "systems", `${ID}`)
+    const docSnap = await getDoc(systemRef)
 
-  async function isSystemInFirestoreDb () {
+    if(!docSnap.exists()){
+      console.log('system not available')
+      return 
+    }
+    else if(systems.find((system: any) => system.sysID === ID)){
+      console.log('system already added')
+      return
+    }
 
-  //  console.log(sysData.some((sys) => sys.sysID === systemDetails.sysID
-  //  ))
-   console.log('===========', sysData)
-   console.log('>>>>>>>>>>>', systemDetails)
-  }
-  const handleSystemCheckAvailabiltyToFirestore = async (systemID: string) => {
-    console.log('sysID', systemID);
-  }
-
-  async function handleAddSystem(name: string, ID: string) {
+    const systemName = docSnap.data().systemName
+   
     try {
       await updateDoc(userDbRef, {
         systems: arrayUnion({
-          sysName: name,
-          sysID: ID,
+          sysID: ID, 
+          sysName: systemName
         }),
       })
+      setShowModal(false)
+      
     } catch (e) {
       console.log(e)
     }
@@ -93,23 +91,34 @@ const AeroHouse = () => {
           style={{ width: "100%" }}>
           <Text style={styles.pageTitle}>AeroHouse Devices</Text>
 
-          {sysData.length !== 0 ? (
-            sysData.map((data, index) => (
-              <SystemCard data={data} index={index} key={index} />
-            ))
-          ) : (
-            <View style={styles.emptyContainer}>
-              <Text> No Available Systems. </Text>
-              <Text> Click the + button to add. </Text>
-            </View>
-          )}
+          {
+            systems.length > 0
+              ?
+              systems.map((data, index) => (
+                <SystemCard data={data} index={index} key={index} />
+              ))
+              : emptyCard()
+          }
 
-          <View style={{ width: "100%", alignItems: "center", marginTop: 20 }}>
-            <View style={{ width: "30%" }}>
-              <SolidButton name='+' onPress={() => setShowModal(true)} />
-            </View>
-          </View>
         </ScrollView>
+
+        <FAB
+          style={{
+            backgroundColor: Colors.Accent.color,
+            borderRadius: 1000,
+            position: 'absolute',
+            margin: 16,
+            right: 0,
+            bottom: 0,
+          }}
+          small
+          color={Colors.White.color}
+          icon="plus"
+          onPress={() => {
+            setSystemID('')
+            setShowModal(true)
+          }}
+        />
 
         <Modal
           visible={showModal}
@@ -118,34 +127,19 @@ const AeroHouse = () => {
           <Text style={styles.modalTitle}>Add System</Text>
 
           <View style={{ width: "100%", marginBottom: 20 }}>
-            <Text style={styles.modalLabel}>System Name:</Text>
-            <View style={styles.inputContainer}>
-              <TextInput
-                style={styles.inputText}
-                value={systemDetails?.sysName}
-                onChangeText={(text) => setSystemDetails({
-                  ...systemDetails,
-                  sysName: text
-                })}
-                underlineColorAndroid='transparent'
-              />
-            </View>
             <Text style={styles.modalLabel}>System ID:</Text>
             <View style={styles.inputContainer}>
               <TextInput
                 style={styles.inputText}
-                value={systemDetails?.sysID}
-                onChangeText={(text) => setSystemDetails({
-                  ...systemDetails,
-                  sysID: text
-                })}
+                value={systemID}
+                onChangeText={(text) => setSystemID(text)}
                 underlineColorAndroid='transparent'
               />
             </View>
           </View>
           <SolidButton
             name='Add'
-            onPress={() => isSystemInFirestoreDb()}
+            onPress={() => { handleAddSystem(systemID)}}
           />
         </Modal>
 
@@ -157,8 +151,24 @@ const AeroHouse = () => {
             {snackbar.title}
           </Text>
         </Snackbar>
+
       </SafeAreaView>
   )
+
+  function emptyCard() {
+    return (
+      <View style={styles.emptyContainer}>
+        <Text style={{
+          color: Colors.White.color,
+          fontFamily: 'font-light'
+        }}> No Available Systems. </Text>
+        <Text style={{
+          color: Colors.White.color,
+          fontFamily: 'font-light'
+        }}> Click the + button to add. </Text>
+      </View>
+    )
+  }
 }
 
 export default AeroHouse
@@ -171,9 +181,11 @@ const styles = StyleSheet.create({
     marginVertical: 20,
   },
   emptyContainer: {
+    height: 150,
     backgroundColor: Colors.Accent.color,
     borderRadius: 20,
     padding: 20,
+    justifyContent: 'center',
     alignItems: "center",
     textAlign: "center",
     marginVertical: 20,

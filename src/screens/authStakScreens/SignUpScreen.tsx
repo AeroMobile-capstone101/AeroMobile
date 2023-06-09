@@ -57,6 +57,7 @@ export default function SignUpScreen({ navigation }: any) {
       const usersRef = doc(db, "users", userCredential.user.uid)
 
       await setDoc(usersRef, {
+        systems: [],
         user_params: {
           email: value.email,
           password: value.password,
@@ -163,8 +164,7 @@ export default function SignUpScreen({ navigation }: any) {
         {/* ---------------- SignUp and Create Account Button----------------------  */}
 
         <View style={{ flex: 1.2, width: "100%" }}>
-          <SolidButton name='Sign Up' func={handleSignUp} />
-
+          <SolidButton name='Sign Up' onPress={handleSignUp} />
           <View
             style={[
               Style.container,

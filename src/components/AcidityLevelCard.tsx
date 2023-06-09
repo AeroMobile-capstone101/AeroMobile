@@ -2,12 +2,12 @@ import { View, Text, StyleSheet } from "react-native"
 import GlobalStyle from "../styles/GlobalStyle"
 import { MaterialIcons } from "@expo/vector-icons"
 
-export default function HumidityCard() {
+export default function HumidityCard(props: any) {
   return (
     <View style={[GlobalStyle.cardContainer_sm, GlobalStyle.elevate]}>
       <Text style={GlobalStyle.cardTitle}>Acidity Level</Text>
       <View style={GlobalStyle.cardContentContainer}>
-        <Text style={GlobalStyle.cardContentValue}>5.5</Text>
+        <Text style={GlobalStyle.cardContentValue}>{props.acidity}</Text>
       </View>
 
       <View style={GlobalStyle.cardIconContainer}>

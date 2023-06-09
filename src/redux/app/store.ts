@@ -1,11 +1,15 @@
 import { configureStore } from "@reduxjs/toolkit";
 import growLightReducer from "../features/growLightSlice";
-import mistMakerReducer from '../features/mistMakerSlice'
+import mistMakerReducer from '../features/mistMakerSlice';
+import aeroHouseReducer from '../features/aeroHouseSlice';
+import userDetailsReducer from "../features/userDetailsSlice";
 
 const store = configureStore({
     reducer: {
         growLight: growLightReducer,
-        mistmaker: mistMakerReducer
+        mistmaker: mistMakerReducer,
+        aerohouse: aeroHouseReducer,
+        userdetails: userDetailsReducer
     }
 })
 
