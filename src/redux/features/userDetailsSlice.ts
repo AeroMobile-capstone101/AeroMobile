@@ -8,7 +8,6 @@ interface userParams {
     password: string
 }
 
-
 const initialState = {
     email: '',
     firstname: '',

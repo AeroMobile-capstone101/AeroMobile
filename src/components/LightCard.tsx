@@ -1,83 +1,86 @@
-import React from "react"
-import { View, Text, StyleSheet, Button } from "react-native"
+import React, { useState } from "react"
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native"
 import Colors from "../styles/Colors"
-import Style from "../styles/GlobalStyle"
-import ButtonCircle from "./button/ButtonCircle"
+import { doc, setDoc } from "firebase/firestore"
+import { db } from "../config/firebase"
+import CardStyles from "../styles/CardStyles"
+import { MaterialCommunityIcons } from '@expo/vector-icons'
 
-import { useSelector, useDispatch } from 'react-redux'
-import { updateGrowLightColor } from "../redux/features/growLightSlice"
-import { RootState } from "../redux/app/store"
+export default function LightCard(props: any) {
+console.log(props.lightColor);
 
+  //state
+  const [selectedColor, setSelectedColor] = useState('blue');
+  const buttonColors = ['off', 'red', 'blue'];
 
+  //functions
+  async function handleLightColorUpdate(color: string) {
+    console.log(props.systemID);
 
-export default function LightCard() {
-  const dispatch = useDispatch()
-  const color = useSelector((state: RootState) => console.log(state.growLight.color)  )
+    const systemRef = doc(db, "system_collection", `${props.systemID}`);
+
+    await setDoc(systemRef, {
+      _lightColor: color
+    }, { merge: true })
+      .then(() => {
+       // run the snackbar here
+      })
+      .catch(() => {
+
+      })
+  }
+
   
+
+  //return jsx
   return (
-    <View style={[styles.cardContainer, Style.elevate]}>
-      <Text style={styles.cardTitle}>Grow Light Settings</Text>
+    <View style={[CardStyles.cardContainer_sm]}>
+
+      <View style={CardStyles.icon}>
+        <MaterialCommunityIcons name='home-lightbulb-outline' size={48} color={props.lightColor === 'off' ? 'gray' : props.lightColor} />
+
+      </View>
 
       <View style={{
-
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
       }}>
-        <View style={{ width: '50%' }}>
 
-          <Text style={styles.selectColorText}>Select Light Color: </Text>
+        {
+          buttonColors.map((color) => (<ButtonColor key={color} color={color} onClick={() => handleLightColorUpdate(color)} />))
+        }
 
-          <View style={{
-            flexDirection: 'row',
-            justifyContent: 'space-around'
-          }}>
-
-            <ButtonCircle
-              onClick={() => dispatch(updateGrowLightColor('red'))}
-              title={'Red'}
-              backgroundColor={'red'}
-              textColor={'white'}
-              height={50}
-            />
-            <ButtonCircle
-              onClick={() => dispatch(updateGrowLightColor('blue'))}
-              title={'Blue'}
-              backgroundColor={'blue'}
-              height={50}
-              textColor={'white'}
-            />
-
-          </View>
-
-        </View>
       </View>
+
+      <Text style={CardStyles.cardLabel_sm}>Lighting</Text>
+
+
     </View>
+
   )
 
 }
 
+// other components
+function ButtonColor(props: any) {
+  return (
+    <TouchableOpacity
+      key={props.color}
+      onPress={props.onClick}
+      style={{
+        backgroundColor: props.color === 'off' ? 'white' : props.color,
+        borderWidth: props.color === 'off' ? 1.2 : 0,
+        borderColor: props.color === 'off' ? 'gray' : '',
+        height: 24,
+        width: 24,
+        borderRadius: 8,
+        marginRight: 4
+      }}
+    >
+    </TouchableOpacity>
+  )
+}
 
 
-const styles = StyleSheet.create({
-  cardContainer: {
-    backgroundColor: Colors.White.color,
-    padding: 15,
-    borderRadius: 10,
-    justifyContent: "space-between",
-  },
-  cardTitle: {
-    fontFamily: "font-bold",
-    fontSize: 16,
-  },
-  selectColorText: {
-    fontFamily: "font-md",
-    fontSize: 15,
-    marginTop: 20,
-    marginBottom: 10,
-  },
-  button: {
-    marginVertical: 5
-  },
-  percentage: {
-    fontFamily: "font-bold",
-    fontSize: 50,
-  },
-})
+

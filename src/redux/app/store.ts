@@ -3,13 +3,15 @@ import growLightReducer from "../features/growLightSlice";
 import mistMakerReducer from '../features/mistMakerSlice';
 import aeroHouseReducer from '../features/aeroHouseSlice';
 import userDetailsReducer from "../features/userDetailsSlice";
+import snackbarSlice from "../features/snackbarSlice";
 
 const store = configureStore({
     reducer: {
         growLight: growLightReducer,
         mistmaker: mistMakerReducer,
         aerohouse: aeroHouseReducer,
-        userdetails: userDetailsReducer
+        userdetails: userDetailsReducer,
+        snackbar: snackbarSlice
     }
 })
 

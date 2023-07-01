@@ -25,14 +25,14 @@ const styles = StyleSheet.create({
     width: "100%",
     paddingVertical: 16,
     alignItems: "center",
-    borderRadius: 5,
+    borderRadius: 30,
   },
   buttonSolid: {
     backgroundColor: Colors.Accent.color,
   },
   buttonText: {
     color: Colors.White.color,
-    fontSize: 15,
+    fontSize: 16,
     fontFamily: "font-md",
   },
 })

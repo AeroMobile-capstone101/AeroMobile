@@ -1,19 +1,33 @@
-import React from "react"
-
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
-
-//import { DrawerMenu } from "../../components/DrawerMenu"
-import { Dashboard } from "./Dashboard"
-import AeroHouse from "./AeroHouse"
-import Settings from "./Settings"
-
+import AeroHouse from "./aerohouse/AeroHouse"
 import Colors from "../../styles/Colors"
-
 import { AntDesign } from "@expo/vector-icons"
 import { Ionicons } from "@expo/vector-icons"
 import { MaterialCommunityIcons } from "@expo/vector-icons"
+import { createStackNavigator } from '@react-navigation/stack';
+import SystemGraph from "./aerohouse/SystemGraph"
+import Settings from "./Settings"
+import Dashboard from "./Dashboard"
 
-const Tab = createBottomTabNavigator()
+
+
+const Stack = createStackNavigator();
+const Tab = createBottomTabNavigator();
+
+function AeroHouseStackNavigator(){
+  return(
+    <Stack.Navigator
+    initialRouteName="Aerohouse"
+      screenOptions={{
+        headerShown: false
+      }}
+    >
+        <Stack.Screen name='Aerohouse' component={AeroHouse}/>
+        <Stack.Screen name='SystemGraph' component={SystemGraph}/>
+    </Stack.Navigator>
+  )
+}
+
 
 //tab navigator styling
 const tabNavigatorOptions = {
@@ -24,14 +38,14 @@ const tabNavigatorOptions = {
   tabBarIconStyle: { marginTop: 10 },
 }
 
-export default function () {
+export default function Home() {
   return (
     <Tab.Navigator
       initialRouteName='Dashboard'
       screenOptions={tabNavigatorOptions}>
       <Tab.Screen
         name='Dashboard'
-        component={Dashboard}
+        component={Dashboard} 
         options={{
           tabBarLabel: "Dashboard",
           tabBarIcon: ({ size, color }) => (
@@ -41,7 +55,7 @@ export default function () {
       />
       <Tab.Screen
         name='AeroHouse'
-        component={AeroHouse}
+        component={AeroHouseStackNavigator}
         options={{
           tabBarIcon: ({ size, color }) => (
             <MaterialCommunityIcons name='hubspot' size={size} color={color} />

@@ -1,20 +1,20 @@
-import { View, Text, StyleSheet } from "react-native"
-import GlobalStyle from "../styles/GlobalStyle"
+import { View, Text  } from "react-native"
 import { MaterialIcons } from "@expo/vector-icons"
+import CardStyles from "../styles/CardStyles"
+import Colors from "../styles/Colors"
 
-export default function HumidityCard(props: any) {
+export default function AcidityLevelCard(props: any) {
   return (
-    <View style={[GlobalStyle.cardContainer_sm, GlobalStyle.elevate]}>
-      <Text style={GlobalStyle.cardTitle}>Acidity Level</Text>
-      <View style={GlobalStyle.cardContentContainer}>
-        <Text style={GlobalStyle.cardContentValue}>{props.acidity}</Text>
+    <View style={[CardStyles.cardContainer_sm]}>
+      <View style={CardStyles.iconContainer}>
+        <MaterialIcons name='opacity' size={24} color={Colors.White.color} />
       </View>
 
-      <View style={GlobalStyle.cardIconContainer}>
-        <MaterialIcons name='opacity' size={20} color='black' />
-      </View>
+      <Text style={CardStyles.cardContentValue}>{props.acidity} pH</Text>
+      <Text style={CardStyles.cardLabel_sm}>Acidity</Text>
+
     </View>
   )
 }
 
-const styles = StyleSheet.create({})
+

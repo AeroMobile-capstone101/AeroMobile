@@ -20,7 +20,7 @@ import SolidButton from "../../components/SolidButton"
 
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth"
 import { doc, setDoc } from "firebase/firestore"
-import db from "../../config/firebase"
+import { db } from "../../config/firebase"
 
 
 // --------component-------
@@ -54,8 +54,7 @@ export default function SignUpScreen({ navigation }: any) {
         value.password
       )
 
-      const usersRef = doc(db, "users", userCredential.user.uid)
-
+      const usersRef = doc(db, "users_collection", userCredential.user.uid)
       await setDoc(usersRef, {
         systems: [],
         user_params: {
@@ -66,6 +65,8 @@ export default function SignUpScreen({ navigation }: any) {
           created_at: `${month}-${day}-${year}`,
         },
       })
+
+
     } catch (error: any) {
       setValue({
         ...value,

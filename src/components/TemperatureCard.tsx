@@ -1,18 +1,19 @@
 import { View, Text, StyleSheet } from "react-native"
 import { FontAwesome5 } from "@expo/vector-icons"
 import GlobalStyle from "../styles/GlobalStyle"
+import CardStyles from "../styles/CardStyles"
+import Colors from "../styles/Colors"
 
 export default function TemperatureCard(props: any) {
   return (
-    <View style={[GlobalStyle.cardContainer_sm, GlobalStyle.elevate]}>
-      <Text style={GlobalStyle.cardTitle}>Temperature</Text>
-      <View style={GlobalStyle.cardContentContainer}>
-        <Text style={GlobalStyle.cardContentValue}>{props.temp}</Text>
+    <View style={[CardStyles.cardContainer_sm]}>
+      <View style={CardStyles.iconContainer}>
+        <FontAwesome5 name='temperature-low' size={24} color={Colors.White.color} />
       </View>
 
-      <View style={GlobalStyle.cardIconContainer}>
-        <FontAwesome5 name='temperature-low' size={20} color='black' />
-      </View>
+      <Text style={CardStyles.cardContentValue}>{props.temp} °C</Text>
+      <Text style={CardStyles.cardLabel_sm}>Temperature</Text>
+
     </View>
   )
 }

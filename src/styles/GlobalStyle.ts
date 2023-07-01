@@ -6,8 +6,8 @@ export default StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#efefefef",
-    paddingHorizontal: 15
+    backgroundColor: Colors.AccentTransparent.color,
+    paddingHorizontal: 8
   },
   componentContainer: {
     width: "100%",
@@ -79,39 +79,5 @@ export default StyleSheet.create({
     shadowColor: "#171717",
     marginHorizontal: 5,
     marginVertical: 5,
-  },
-
-  //small card container
-  cardContainer_sm: {
-    backgroundColor: Colors.White.color,
-    padding: 15,
-    borderRadius: 10,
-    width: 145,
-    height: 170,
-    alignItems: "center",
-    marginRight: 5,
-  },
-  cardTitle: {
-    fontFamily: "font-bold",
-    fontSize: 15,
-  },
-  cardContentContainer: {
-    alignItems: "center",
-    marginVertical: 15,
-  },
-  cardContentValue: {
-    fontFamily: "font-bold",
-    fontSize: 55,
-  },
-  cardContentLabel: {
-    fontFamily: "font-bold",
-    fontSize: 20,
-    marginRight: 30,
-  },
-  cardIconContainer: {
-    flexDirection: "row",
-    width: "100%",
-    justifyContent: "flex-end",
-    alignItems: "center",
-  },
+  }
 })

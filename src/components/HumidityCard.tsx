@@ -1,18 +1,18 @@
-import { View, Text, StyleSheet } from "react-native"
-import GlobalStyle from "../styles/GlobalStyle"
+import { View, Text } from "react-native"
 import { Entypo } from "@expo/vector-icons"
+import CardStyles from "../styles/CardStyles"
+import Colors from "../styles/Colors"
 
 export default function HumidityCard(props: any) {
   return (
-    <View style={[GlobalStyle.cardContainer_sm, GlobalStyle.elevate]}>
-      <Text style={GlobalStyle.cardTitle}>Humidity</Text>
-      <View style={GlobalStyle.cardContentContainer}>
-        <Text style={GlobalStyle.cardContentValue}>{props.humidity}</Text>
+    <View style={[CardStyles.cardContainer_sm]}>
+      <View style={CardStyles.iconContainer}>
+      <Entypo name='air' size={24} color={Colors.White.color} />
       </View>
 
-      <View style={GlobalStyle.cardIconContainer}>
-        <Entypo name='air' size={20} color='black' />
-      </View>
+      <Text style={CardStyles.cardContentValue}>{props.humidity} %</Text>
+      <Text style={CardStyles.cardLabel_sm}>Humidity</Text>
+
     </View>
   )
 }

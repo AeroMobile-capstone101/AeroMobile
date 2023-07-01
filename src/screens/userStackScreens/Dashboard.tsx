@@ -1,103 +1,106 @@
-import { useEffect, useRef } from "react"
+import { useEffect } from "react"
 import { View, Text, Image, StyleSheet, RefreshControl, TouchableOpacity, Dimensions } from "react-native"
 import Style from "../../styles/GlobalStyle"
 import { ScrollView } from "react-native-gesture-handler"
 import { SafeAreaView } from "react-native-safe-area-context"
 import { Ionicons } from "@expo/vector-icons"
 import { MistMakerCard, HumidityCard, TemperatureCard, LightCard, AcidityLevelCard } from "../../components/components"
-import { colorBasedOnTime, handleGreetings } from "../../helpers/helper"
-import { useAuth } from "../../hooks/useAuth"
-import { doc, getDoc, onSnapshot } from "firebase/firestore"
-import db from "../../config/firebase"
+import { colorBasedOnTime, handleGreetings } from "../../helpers/greetings"
+import { doc, onSnapshot } from "firebase/firestore"
+import { auth, db } from "../../config/firebase"
 import { useState } from "react"
 import Colors from "../../styles/Colors"
-
 import { useSelector, useDispatch } from "react-redux"
 import { RootState } from "../../redux/app/store"
 import { addAerohouseSystem } from "../../redux/features/aeroHouseSlice"
-import { addUserDetails } from "../../redux/features/userDetailsSlice"
+import { Snackbar } from "react-native-paper"
+import { setSnack } from "../../redux/features/snackbarSlice"
 
-export function Dashboard(props: any) {
-
+const Dashboard = (props: any) => {
+  // getting phone screen width and height
   const { height: WINDOW_HEIGHT, width: WINDOW_WIDTH } = Dimensions.get('window');
 
-  const [sysArr, setSysArr] = useState([{
-    sysName: '',
-    sysID: ''
-  }])
-  const [sysActive, setSysActive] = useState(0);
-  const [fetchDependency, setFetchDependency] = useState(false)
-  const [sysIDSelected, setSysIDSelected] = useState('');
-  const [refresh, setRefresh] = useState(false);
-
-  const [isLoaded, setisLoaded] = useState(true) // used to check whether the data are loaded
-  const userID = useAuth().user?.uid // getting unique user id
-  const userRef = doc(db, "users", `${userID}`) // having a reference to the users unique firestore doc
-  const systemRef = doc(db, "systems", `aerosystem001`)
-
-
+  // redux
   const dispatch = useDispatch();
-  const aeroHouseRedux = useSelector((state: RootState) => state)
-  const aeroHouse = aeroHouseRedux.aerohouse.aeroHouse
-  const userDetails = aeroHouseRedux.userdetails
+  const redux = useSelector((state: RootState) => state)
+  const aeroHouse = redux.aerohouse.aeroHouse
 
+  // firebase (db, auth, and etc.)
+  const currentUser = auth.currentUser;
+  if (currentUser === null) {
+    return
+  }
 
+  const userID = currentUser.uid                  // getting user unique ID
+  const userRef = doc(db, "users_collection", `${userID}`)   // reference to the users doc in a users_collection
+
+  // state
+  const [loading, setLoading] = useState(true);
+  const [sysActive, setSysActive] = useState(0);
+  const [sysIDSelected, setSysIDSelected] = useState('');
+  const [systemParams, setSystemParams] = useState<any>();
+
+  // hooks
   useEffect(() => {
-   
     const realtimeUpdates = onSnapshot(userRef, (doc) => {
 
-      if(!doc.exists()){
-        setRefresh(!refresh)
+      if (!doc.exists()) {
         return
       }
 
       dispatch(addAerohouseSystem(doc.data().systems))
-      dispatch(addUserDetails(doc.data().user_params))
-      setisLoaded(false)
+      if (doc.data().systems.length > 0) {
+        setSysIDSelected(doc.data().systems[0].sysID)
+      }
+      setLoading(false)
 
     }, (error) => {
       console.log(error)
     })
+    return () => realtimeUpdates()
+  }, [loading])
 
-     return () => realtimeUpdates()
-
-  }, [refresh])
-
-  const [systemParams, setSystemParams] = useState<any>();
 
   useEffect(() => {
+    if (sysIDSelected === '') {
+      return
+    }
+    const systemRef = doc(db, "system_collection", `${sysIDSelected}`)
+
     const getSystemParams = onSnapshot(systemRef, (doc) => {
       setSystemParams(doc.data())
-  })
+      setLoading(false)
 
-  return () => getSystemParams()
+    })
+    return () => getSystemParams()
 
   }, [sysIDSelected])
-  
-    console.log('system Params', systemParams)
 
+
+  //functions
   function onRefresh() {
-    setisLoaded(true)
-   setRefresh(!refresh)
+    setLoading(true)
   }
 
-
-
-  console.log('system Selected === ', sysIDSelected)
-
+  // return jsx
   return (
-    isLoaded
+    loading
       ?
       <View style={Style.container}>
         <Text>Loading...</Text>
       </View>
       :
-      <SafeAreaView style={[Style.container]}>
+      <View style={[Style.container, { paddingTop: 24 }]}>
         <ScrollView
           showsVerticalScrollIndicator={false}
+          overScrollMode="never"
           refreshControl={
-            <RefreshControl refreshing={isLoaded} onRefresh={onRefresh} />
-          }>
+            <RefreshControl refreshing={loading} onRefresh={onRefresh} />
+          }
+          contentContainerStyle={{
+            paddingBottom: 8
+          }}
+        >
           <View style={customStyle.headerContainer}>
             <View style={{ justifyContent: "center" }}>
               <Text style={customStyle.greeting}>
@@ -109,7 +112,11 @@ export function Dashboard(props: any) {
                 {handleGreetings()}
               </Text>
               <Text style={customStyle.name}>
-                {userDetails.firstname === "update firstname" ? "AeroPepz" : userDetails.firstname}
+                {
+                  currentUser?.displayName === null || currentUser?.displayName === undefined
+                    ? "AeroPepz"
+                    : currentUser.displayName
+                }
               </Text>
             </View>
 
@@ -126,31 +133,58 @@ export function Dashboard(props: any) {
             renderSystems()
           }
 
-          <Text style={customStyle.headingTitle}>Parameters: </Text>
+          {
+            aeroHouse.length === 0
+              ? ''
+              : renderParameters()
+          }
 
-          <MistMakerCard />
-
-          <ScrollView
-            showsHorizontalScrollIndicator={false}
-            horizontal={true}
-            style={{
-              width: "100%",
-              flexDirection: "row",
-              marginBottom: 5,
-            }}>
-
-            <AcidityLevelCard acidity={systemParams.acidity}/>
-            <TemperatureCard temp={systemParams.temperature}/>
-            <HumidityCard humidity={systemParams.humidity}/>
-
-          </ScrollView>
-
-          <LightCard />
-          <View style={{ marginBottom: 25 }}></View>
         </ScrollView>
 
-      </SafeAreaView>
+        <Snackbar
+          duration={1200}
+          visible={redux.snackbar.isShown}
+          onDismiss={() => dispatch(setSnack({ ...redux.snackbar, isShown: false }))}>
+          <Text style={{ textAlign: "center", color: Colors.White.color }}>
+            {redux.snackbar.message}
+          </Text>
+        </Snackbar>
+
+      </View>
   )
+
+  function renderParameters() {
+    return (
+      <>
+        <Text style={customStyle.headingTitle}>Parameters: </Text>
+        <MistMakerCard
+          mistOnTime={systemParams === undefined ? 0 : systemParams._mistontime}
+          mistOffTime={systemParams === undefined ? 0 : systemParams._mistofftime}
+          systemID={sysIDSelected}
+        />
+
+
+        <View style={{
+          justifyContent: 'center',
+          alignItems: 'center',
+          marginTop: 8,
+        }}>
+
+          <View style={{ flexDirection: 'row' }}>
+            <LightCard systemID={sysIDSelected} lightColor={systemParams === undefined ? Colors.Accent.color : systemParams._lightColor} />
+            <TemperatureCard temp={systemParams === undefined ? 0 : systemParams._temperature} />
+          </View>
+
+          <View style={{ flexDirection: 'row' }}>
+            <AcidityLevelCard acidity={systemParams === undefined ? 0 : systemParams._acidity} />
+            <HumidityCard humidity={systemParams === undefined ? 0 : systemParams._humidity} />
+          </View>
+
+        </View>
+
+      </>
+    )
+  }
 
   function renderSystems() {
     return (
@@ -158,7 +192,7 @@ export function Dashboard(props: any) {
         horizontal={true}
         showsHorizontalScrollIndicator={false}
         style={{
-          marginHorizontal: 10,
+          marginHorizontal: 8,
         }}
       >
         {
@@ -166,33 +200,33 @@ export function Dashboard(props: any) {
             ?
             aeroHouse.map((sys: any, index) => {
               return (
-                <View
-                  style={[{
-                    backgroundColor: sysActive === index ? Colors.Accent.color : Colors.White.color,
-                    paddingHorizontal: 20,
-                    paddingVertical: 12,
-                    marginLeft: 10,
-                    borderRadius: 10,
-                    marginBottom: 30
-                  }, Style.elevate]}
+
+
+
+                <TouchableOpacity
                   key={index}
+                  onPress={() => {
+                    setSysActive(index)
+                    setSysIDSelected(sys.sysID)
+                  }}
                 >
-                  <TouchableOpacity
-                    onPress={() => {
-                      setSysActive(index)
-                      setSysIDSelected(sys.sysID)
-                    }}
-                    style={{
-                    }}
-                  >
+                  <View
+                    style={[{
+                      backgroundColor: sysActive === index ? Colors.Accent.color : Colors.White.color,
+                      paddingHorizontal: 24,
+                      paddingVertical: 16,
+                      marginLeft: 8,
+                      borderRadius: 30,
+                      marginBottom: 32
+                    }]}>
                     <Text style={{
                       fontFamily: 'font-reg',
-                      fontSize: 14,
+                      fontSize: 13,
                       color: sysActive === index ? Colors.White.color : Colors.Black.color
                     }}>{sys.sysName}</Text>
-                  </TouchableOpacity>
+                  </View>
+                </TouchableOpacity>
 
-                </View>
               )
             })
             :
@@ -203,7 +237,7 @@ export function Dashboard(props: any) {
                 style={{
                   backgroundColor: Colors.Accent.color,
                   width: WINDOW_WIDTH - 50,
-                  height: 100,
+                  height: 150,
                   justifyContent: 'center',
                   alignItems: 'center',
                   borderRadius: 10,
@@ -221,10 +255,12 @@ export function Dashboard(props: any) {
               </View>
             </TouchableOpacity>
         }
-      </ScrollView>
+      </ScrollView >
     )
   }
 }
+
+export default Dashboard
 
 const customStyle = StyleSheet.create({
   greeting: {

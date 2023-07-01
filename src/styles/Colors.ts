@@ -11,6 +11,6 @@ export default StyleSheet.create({
     color: "#17A08D",
   },
   AccentTransparent: {
-    color: "rgba(23,160,141,.6)",
+    color: "rgba(23,160,141,.03)",
   },
 })

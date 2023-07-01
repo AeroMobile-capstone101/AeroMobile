@@ -1,36 +1,32 @@
-import {
-  View,
-  Text,
-  TextInput,
-  StyleSheet,
-  TouchableOpacity,
-  Image,
-  Button,
-} from "react-native"
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image } from "react-native"
 import { useEffect, useState } from "react"
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth"
-
 import { MaterialIcons } from "@expo/vector-icons"
 import { Entypo } from "@expo/vector-icons"
-
 import Style from "../../styles/GlobalStyle"
 import Colors from "../../styles/Colors"
 import { SafeAreaView } from "react-native-safe-area-context"
 import { ScrollView } from "react-native-gesture-handler"
-
 import { SolidButton } from "../../components/components"
+import { auth } from "../../config/firebase"
 
-// ---------------------------------------------------
 export default function LogInScreen({ navigation }: any) {
-  const auth = getAuth()
-  const [showPass, setShowPass] = useState(true)
 
+  // state
+  const [showPass, setShowPass] = useState(true)
   const [value, setValue] = useState({
     email: "",
     password: "",
     error: "",
   })
 
+  // hooks
+
+  useEffect(() => {
+    console.debug(value.error)
+  }, [value.error])
+
+  // functions
   function inputValidate() {
     if (value.email === "" && value.password === "") {
       setValue({ ...value, error: "Please provide your details!" })
@@ -66,16 +62,13 @@ export default function LogInScreen({ navigation }: any) {
     }
   }
 
-  useEffect(() => {
-    console.debug(value.error)
-  }, [value.error])
-  //  ---------------------------------------------
+  // return jsx
   return (
     <SafeAreaView style={[Style.container]}>
       <ScrollView
         style={[{ width: "100%", paddingHorizontal: 24 }]}
         showsVerticalScrollIndicator={false}>
-          
+
         {/* ---------------- Header Text ----------------------  */}
         <View style={[Style.headerContainer]}>
           <Image
@@ -150,6 +143,7 @@ export default function LogInScreen({ navigation }: any) {
   )
 }
 
+// styling
 const styles = StyleSheet.create({
   // button container styling
   buttonContainer: {
