@@ -1,24 +1,17 @@
-import { View, Text, TouchableOpacity, ScrollView, Dimensions, StyleSheet } from 'react-native'
+import { View, Text, TouchableOpacity, ScrollView, Dimensions, StyleSheet, FlatList } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import Style from "../../../styles/GlobalStyle"
 import { db } from '../../../config/firebase';
 import { doc, onSnapshot } from 'firebase/firestore';
 import { Ionicons } from "@expo/vector-icons"
-import { DataPoint, animatedData, originalData } from '../../../assets/Data';
-import { curveBasis, line, scaleLinear, scaleTime } from 'd3'
 import Colors from '../../../styles/Colors';
-import {Canvas, Path, Skia, SkPath} from "@shopify/react-native-skia";
+import TempGraph from '../../../components/Charts/TempGraph';
+import { originalData } from '../../../assets/Data';
 
 interface summaryFormat {
     summary: [],
     loading: boolean,
     error: any
-}
-
-interface GraphData {
-    min: number;
-    max: number;
-    curve: SkPath
 }
 
 const { height: window_height, width: window_width } = Dimensions.get('window'); // screen width and height
@@ -62,6 +55,22 @@ const SystemGraph = (props: any) => {
         return () => getSystemSummary()
     }, [summaryData.loading])
 
+    console.log(summaryData.summary);
+
+
+
+    // transforming temperature data
+    const tempData = summaryData.summary.map((data: any) => {
+        const d = new Date(data.created_at);
+        return (
+            { date: d, value: data.temperature, label: '@' }
+        )
+    });
+    // structuring humidity data
+    const humidData = summaryData.summary.map((data: any) => ({ date: data.created_at, humidity: data.humidity }));
+    // structuring acidity (pH) data
+    const phData = summaryData.summary.map((data: any) => ({ date: data.created_at, acidity: data.acidity }));
+
     return (
         summaryData.loading
             ?
@@ -79,7 +88,6 @@ const SystemGraph = (props: any) => {
                     zIndex: 100,
                     flexDirection: 'row',
                     alignItems: 'center',
-
                 }}>
 
                     <TouchableOpacity
@@ -98,191 +106,121 @@ const SystemGraph = (props: any) => {
                         <View style={{}}>
                             <Text>{summaryData.error + ''}</Text>
                         </View>
-                        : <RenderDataGraph data={summaryData.summary} />
-
+                        : renderGraphs()
                 }
 
             </View>
     )
+
+    function renderGraphs() {
+        const cardData = summaryData.summary.reverse();
+        return (
+            <View
+                style={{
+                    height: '100%',
+                    width: '100%',
+                }}
+            >
+
+                {/* GRAPH  */}
+                <ScrollView
+                    horizontal={true}
+                    showsHorizontalScrollIndicator={false}
+                    overScrollMode='never'
+                    pagingEnabled={true}
+                    snapToAlignment='center'
+                    contentContainerStyle={{
+                        paddingTop: 100,
+                        paddingBottom: 10,
+                        paddingLeft: 10,
+                        paddingRight: 50,
+                        backgroundColor: Colors.White.color,
+                    }}
+                >
+
+                    <View style={[customStyle.graphContainer, { backgroundColor: "rgba(23,160,141, 0.25)" }]}>
+                        <Text>Temperature</Text>
+                        <TempGraph dataGraph={tempData} sample={tempData} />
+                    </View>
+
+
+                </ScrollView>
+
+                {/* CARDS */}
+                <View
+                    style={{
+                        backgroundColor: Colors.White.color,
+                        height: '50%',
+                        width: '100%',
+                    }}
+                >
+                    {/* {
+                        renderCards()
+                    } */}
+
+                    <FlatList
+                        data={cardData}
+                        renderItem={({ item }: any) => <RenderCards data={item}/>}
+                        keyExtractor={(item: any) => item.created_at}
+                        removeClippedSubviews={true}
+                        initialNumToRender={10}
+                    />
+
+                </View>
+            </View>
+        )
+    }
+
 }
 
-export default SystemGraph
-
-const RenderDataGraph = (props: any) => {
-
-    // Graph
-    const GRAPH_HEIGHT = 100;
-    const GRAPH_WIDTH = window_width - 100;
-
-    const makeGraph = (data: DataPoint[]): GraphData => {
-
-        const min = Math.min(...data.map(val => val.value)); // getting the minimum value
-        const max = Math.max(...data.map(val => val.value)); // getting the maximum value
-
-        const y = scaleLinear().domain([0, max]).range([GRAPH_HEIGHT, 0]);
-        const x = scaleTime()
-            .domain([new Date(2000, 1, 1), new Date(2000, 1, 15)])
-            .range([0, GRAPH_WIDTH - 20]);
-            
-        console.log('x ====> ', x);
-        console.log('y ====> ', y);
-        
-
-        const curvedLine = line<DataPoint>()
-            .x((d) => x(new Date(d.date)))
-            .y((d) => y(d.value))
-            .curve(curveBasis)(data);
-
-        const skPath = Skia.Path.MakeFromSVGString(curvedLine!)
-
-        return {
-            min,
-            max,
-            curve: skPath!,
-        }
-
-    };
-
-    const tempGraph = makeGraph(originalData);
-    const humidGraph = makeGraph(animatedData);
+const RenderCards = (props: any) =>  {
 
     return (
         <View
             style={{
-                height: '100%',
-                width: '100%',
+                marginHorizontal: 8,
+                marginVertical: 8,
+                paddingHorizontal: 24,
+                paddingVertical: 16,
+                borderWidth: 1,
+                borderColor: Colors.Black.color,
+                borderRadius: 30
             }}
         >
-
-            {/* GRAPH  */}
-            <ScrollView
-                horizontal={true}
-                showsHorizontalScrollIndicator={false}
-                overScrollMode='never'
-                pagingEnabled={true}
-                snapToAlignment='center'
-                contentContainerStyle={{
-                    paddingTop: 100,
-                    paddingBottom: 10,
-                    paddingLeft: 10,
-                    paddingRight: 50,
-                    backgroundColor: Colors.White.color,
-                }}
-            >
-
-                {/* Temperature Graph */}
-                <View style={[customStyle.graphContainer, { backgroundColor: 'lightblue' }]}>
-                    <Text style={customStyle.graphTitle}>Temperature</Text>
-                    <Canvas
-                        style={{
-                            height: GRAPH_HEIGHT,
-                            width: GRAPH_WIDTH,
-                        }}
-                    >
-                        <Path style="stroke" path={tempGraph.curve} strokeWidth={3} color={Colors.White.color} />
-                    </Canvas>
-
-                    <Text style={{marginTop: 20}}>Temperature</Text>
-
-
-                </View>
-
-
-                {/* Humidity Graph */}
-                <View style={[customStyle.graphContainer, { backgroundColor: 'coral' }]}>
-                    <Text style={customStyle.graphTitle}>Humidity</Text>
-                    <Canvas
-                        style={{
-                            height: GRAPH_HEIGHT,
-                            width: GRAPH_WIDTH,
-                        }}
-                    >
-                        <Path style="stroke" path={humidGraph.curve} strokeWidth={3} color={Colors.White.color} />
-                    </Canvas>
-
-                </View>
-
-                {/* Humidity Graph */}
-                <View style={[customStyle.graphContainer, { backgroundColor: 'coral' }]}>
-                    <Text style={customStyle.graphTitle}>Humidity</Text>
-                    <Canvas
-                        style={{
-                            height: GRAPH_HEIGHT,
-                            width: GRAPH_WIDTH,
-                        }}
-                    >
-                        <Path style="stroke" path={humidGraph.curve} strokeWidth={3} color={Colors.White.color} />
-                    </Canvas>
-
-                </View>
-
-            </ScrollView>
-
-            {/* CARDS */}
+            <Text style={{ fontFamily: 'font-md' }}  >{props.data.created_at}</Text>
             <View
                 style={{
-                    backgroundColor: Colors.White.color,
-                    height: '50%',
-                    width: '100%',
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    marginVertical: 10
                 }}
             >
-                <ScrollView
-                    showsVerticalScrollIndicator={false}
-                    overScrollMode='never'
-                    contentContainerStyle={{
-                        paddingVertical: 15
-                    }}
-                >
-                    {
-                        props.data.map((value: any, index: number) => (
-                            <View
-                                key={index}
-                                style={{
-                                    marginHorizontal: 10,
-                                    marginVertical: 5,
-                                    paddingHorizontal: 20,
-                                    paddingVertical: 20,
-                                    borderWidth: 1,
-                                    borderColor: Colors.Black.color,
-                                    borderRadius: 15
-                                }}
-                            >
-
-                                <Text style={{ fontFamily: 'font-md' }}  >{value.created_at}</Text>
-
-                                <View
-                                    style={{
-                                        flexDirection: 'row',
-                                        justifyContent: 'space-between',
-                                        marginVertical: 10
-                                    }}
-                                >
-                                    <View>
-                                        <Text>Humidity</Text>
-                                    </View>
-                                    <View>
-                                        <Text>Temperature</Text>
-                                    </View>
-                                    <View>
-                                        <Text>Acidity</Text>
-                                    </View>
-                                </View>
-                            </View>
-                        ))
-                    }
-
-                </ScrollView>
-
+                <View>
+                    <Text>Humidity</Text>
+                    <Text>{props.data.humidity}</Text>
+                </View>
+                <View>
+                    <Text>Temperature</Text>
+                    <Text>{props.data.temperature}</Text>
+                </View>
+                <View>
+                    <Text>Acidity</Text>
+                    <Text>{props.data.acidity}</Text>
+                </View>
             </View>
         </View>
     )
+
 }
+
+export default SystemGraph
+
 
 const customStyle = StyleSheet.create({
     graphContainer: {
         width: window_width - 20,
-        padding: 30,
-        borderRadius: 25,
+        padding: 32,
+        borderRadius: 30,
         marginLeft: 1,
         marginRight: 10
     },

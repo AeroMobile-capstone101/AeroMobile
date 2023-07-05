@@ -154,12 +154,13 @@ const Dashboard = (props: any) => {
   )
 
   function renderParameters() {
+
     return (
       <>
         <Text style={customStyle.headingTitle}>Parameters: </Text>
         <MistMakerCard
-          mistOnTime={systemParams === undefined ? 0 : systemParams._mistontime}
-          mistOffTime={systemParams === undefined ? 0 : systemParams._mistofftime}
+          mistOnTime={systemParams === undefined ? 0 : systemParams._mistOnTime}
+          mistOffTime={systemParams === undefined ? 0 : systemParams._mistOffTime}
           systemID={sysIDSelected}
         />
 
